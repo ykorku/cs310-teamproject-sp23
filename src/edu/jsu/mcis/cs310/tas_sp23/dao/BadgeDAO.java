@@ -5,14 +5,12 @@ import java.sql.*;
 
 public class BadgeDAO {
 
+    // Simple change to test commit
     private static final String QUERY_FIND = "SELECT * FROM badge WHERE id = ?";
-
     private final DAOFactory daoFactory;
 
     BadgeDAO(DAOFactory daoFactory) {
-
         this.daoFactory = daoFactory;
-
     }
 
     public Badge find(String id) {

@@ -1,6 +1,6 @@
 package edu.jsu.mcis.cs310.tas_sp23;
 
-import edu.jsu.mcis.cs310.tas_sp23.dao.BadgeDAO;
+import edu.jsu.mcis.cs310.tas_sp23.dao.PunchDAO;
 import edu.jsu.mcis.cs310.tas_sp23.dao.DAOFactory;
 import java.time.*;
 import java.util.*;
@@ -14,15 +14,15 @@ public class Main {
         // test database connectivity; get DAOs
 
         DAOFactory daoFactory = new DAOFactory("tas.jdbc");
-        BadgeDAO badgeDAO = daoFactory.getBadgeDAO();
+        PunchDAO punchDAO = daoFactory.getPunchDAO();
         
         // find badge
 
-        Badge b = badgeDAO.find("31A25435");
+        Punch b = punchDAO.find(343);
         
         // output should be "Test Badge: #31A25435 (Munday, Paul J)"
         
-        System.err.println("Test Badge: " + b.toString());
+        System.err.println("Test Badge: " + b.printOriginal());
 
     }
 

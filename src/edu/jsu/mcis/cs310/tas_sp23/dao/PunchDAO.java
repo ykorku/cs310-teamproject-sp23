@@ -43,13 +43,20 @@ public class PunchDAO {
                         //Create badge variable. Use BadgeDAO to find it.
                         BadgeDAO badgeDAO = new BadgeDAO(daoFactory);
                         String badgeId = rs.getString("badgeid");
-                        Badge badge = badgeDAO.find(badgeId);  
+                        Badge badge = badgeDAO.find(badgeId);
                         
+                        //Get eventtype
+                        int eventtypeid = rs.getInt("eventtypeid");
+                        EventType punchtype = EventType.values()[eventtypeid];
+                                
                         int terminalid = rs.getInt("terminalid");
-                        LocalDateTime originaltimestamp = (LocalDateTime) rs.getObject("timestamp");
-                        
+
+                        java.sql.Timestamp timestamp = new Timestamp(new java.util.Date().getTime());
+                        timestamp = rs.getTimestamp("timestamp");
+                        LocalDateTime originaltimestamp = timestamp.toLocalDateTime();  
+
                         //create punch variable.
-                        //punch = new Punch(id, terminalid, badge, originaltimestamp, punchtype);
+                        punch = new Punch(id, terminalid, badge, originaltimestamp, punchtype);
 
                     }
 

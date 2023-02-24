@@ -1,23 +1,24 @@
 package edu.jsu.mcis.cs310.tas_sp23.dao;
 
+import edu.jsu.mcis.cs310.tas_sp23.Badge;
+import edu.jsu.mcis.cs310.tas_sp23.EventType;
 import edu.jsu.mcis.cs310.tas_sp23.Punch;
 import java.sql.*;
+import java.time.LocalDateTime;
 
 public class PunchDAO {
 
-    private static final String QUERY_FIND = "SELECT * FROM punch WHERE id = ?";
+    private static final String QUERY_FIND = "SELECT * FROM event WHERE id = ?";
 
     private final DAOFactory daoFactory;
 
     PunchDAO(DAOFactory daoFactory) {
-
         this.daoFactory = daoFactory;
-
     }
 
-    public Punch find(String id) {
+    public Punch find(int id) {
 
-        Punch badge = null;
+        Punch punch = null;
 
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -27,9 +28,9 @@ public class PunchDAO {
             Connection conn = daoFactory.getConnection();
 
             if (conn.isValid(0)) {
-
+                
                 ps = conn.prepareStatement(QUERY_FIND);
-                ps.setString(1, id);
+                ps.setInt(1, id);
 
                 boolean hasresults = ps.execute();
 
@@ -38,9 +39,17 @@ public class PunchDAO {
                     rs = ps.getResultSet();
 
                     while (rs.next()) {
-
-                        String description = rs.getString("description");
-                        badge = new Badge(id, description);
+                        
+                        //Create badge variable. Use BadgeDAO to find it.
+                        BadgeDAO badgeDAO = new BadgeDAO(daoFactory);
+                        String badgeId = rs.getString("badgeid");
+                        Badge badge = badgeDAO.find(badgeId);  
+                        
+                        int terminalid = rs.getInt("terminalid");
+                        LocalDateTime originaltimestamp = (LocalDateTime) rs.getObject("timestamp");
+                        
+                        //create punch variable.
+                        //punch = new Punch(id, terminalid, badge, originaltimestamp, punchtype);
 
                     }
 
@@ -71,7 +80,7 @@ public class PunchDAO {
 
         }
 
-        return badge;
+        return punch;
 
     }
 

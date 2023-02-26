@@ -1,20 +1,20 @@
 package edu.jsu.mcis.cs310.tas_sp23.dao;
 
-import edu.jsu.mcis.cs310.tas_sp23.Badge;
+import edu.jsu.mcis.cs310.tas_sp23.Department;
 import java.sql.*;
 
-public class BadgeDAO {
-
-    private static final String QUERY_FIND = "SELECT * FROM badge WHERE id = ?";
+public class DepartmentDAO {
+    
+    private static final String QUERY_FIND = "SELECT * FROM department WHERE id = ?";
     private final DAOFactory daoFactory;
 
-    BadgeDAO(DAOFactory daoFactory) {
+    DepartmentDAO(DAOFactory daoFactory) {
         this.daoFactory = daoFactory;
     }
+    
+    public Department find(int id) {
 
-    public Badge find(String id) {
-
-        Badge badge = null;
+        Department department = null;
 
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -26,7 +26,7 @@ public class BadgeDAO {
             if (conn.isValid(0)) {
 
                 ps = conn.prepareStatement(QUERY_FIND);
-                ps.setString(1, id);
+                ps.setInt(1, id);
 
                 boolean hasresults = ps.execute();
 
@@ -37,7 +37,8 @@ public class BadgeDAO {
                     while (rs.next()) {
 
                         String description = rs.getString("description");
-                        badge = new Badge(id, description);
+                        int terminalid = rs.getInt("terminalid");
+                        department = new Department(id, description, terminalid);
 
                     }
 
@@ -68,8 +69,8 @@ public class BadgeDAO {
 
         }
 
-        return badge;
+        return department;
 
     }
-
+    
 }

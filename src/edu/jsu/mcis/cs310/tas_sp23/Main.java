@@ -19,13 +19,11 @@ public class Main {
         Badge b = badgeDAO.find("31A25435");
         
         // output should be "Test Badge: #31A25435 (Munday, Paul J)"
+
+        Badge b = badgeDAO.find("12565C60");
+        
+        // output should be "Test Badge: #12565C60 (Chapman, Joshua E)"
+        
         System.err.println("Test Badge: " + b.toString());
-        
-        LocalDate date = LocalDate.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        String text = date.format(formatter);
-        LocalDate parsedDate = LocalDate.parse(text, formatter);
-        
-         System.out.println(parsedDate + " is of type " + ((Object)parsedDate).getClass().getSimpleName());
     }
 }

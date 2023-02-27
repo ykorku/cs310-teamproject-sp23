@@ -68,6 +68,6 @@ public class DepartmentFindTest {
         Department d5 = departmentDAO.find(5);
 
         /* Compare to Expected Values */
-        assertEquals("#3 (Hafting), Terminal ID: 105", d5.toString());
+        assertEquals("#5 (Hafting), Terminal ID: 105", d5.toString());
     }
 }

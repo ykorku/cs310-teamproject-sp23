@@ -39,5 +39,12 @@ public final class DAOFactory {
     public PunchDAO getPunchDAO() {
         return new PunchDAO(this);
     }
-
+    
+    public ShiftDAO getShiftDAO() {
+         return new ShiftDAO(this);
+    }
+  
+    public DepartmentDAO getDepartmentDAO() {
+        return new DepartmentDAO(this);
+    }
 }

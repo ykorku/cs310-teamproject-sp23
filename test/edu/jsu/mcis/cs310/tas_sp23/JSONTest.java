@@ -11,21 +11,16 @@ import static org.junit.Assert.*;
 import com.github.cliftonlabs.json_simple.*;
 
 public class JSONTest {
-
     private DAOFactory daoFactory;
 
     @Before
     public void setup() {
-
         daoFactory = new DAOFactory("tas.jdbc");
-
     }
 
     @Test
     public void testJSONShift1Weekday() {
-
         try {
-
             BadgeDAO badgeDAO = daoFactory.getBadgeDAO();
             PunchDAO punchDAO = daoFactory.getPunchDAO();
             ShiftDAO shiftDAO = daoFactory.getShiftDAO();
@@ -59,16 +54,12 @@ public class JSONTest {
         catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     @Test
     public void testJSONShift1Weekend() {
-
         try {
-
             BadgeDAO badgeDAO = daoFactory.getBadgeDAO();
-
             PunchDAO punchDAO = daoFactory.getPunchDAO();
             ShiftDAO shiftDAO = daoFactory.getShiftDAO();
 
@@ -96,19 +87,15 @@ public class JSONTest {
 
             /* Compare to Expected JSON */
             assertEquals(expected, actual);
-
         }
         catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     @Test
     public void testJSONShift2Weekday() {
-
         try {
-
             BadgeDAO badgeDAO = daoFactory.getBadgeDAO();
             PunchDAO punchDAO = daoFactory.getPunchDAO();
             ShiftDAO shiftDAO = daoFactory.getShiftDAO();
@@ -142,7 +129,5 @@ public class JSONTest {
         catch (Exception e) {
             e.printStackTrace();
         }
-
     }
-
 }

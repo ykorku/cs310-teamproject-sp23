@@ -18,9 +18,9 @@ public class Main {
         
         // find badge
 
-        Badge b = badgeDAO.find("31A25435");
+        Badge b = badgeDAO.find("12565C60");
         
-        // output should be "Test Badge: #31A25435 (Munday, Paul J)"
+        // output should be "Test Badge: #12565C60 (Chapman, Joshua E)"
         
         System.err.println("Test Badge: " + b.toString());
 

@@ -6,6 +6,7 @@ import java.time.*;
 import java.util.*;
 import java.time.temporal.ChronoUnit;
 import java.time.format.DateTimeFormatter;
+import java.time.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -19,5 +20,12 @@ public class Main {
         
         // output should be "Test Badge: #31A25435 (Munday, Paul J)"
         System.err.println("Test Badge: " + b.toString());
+        
+        LocalDate date = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String text = date.format(formatter);
+        LocalDate parsedDate = LocalDate.parse(text, formatter);
+        
+         System.out.println(parsedDate + " is of type " + ((Object)parsedDate).getClass().getSimpleName());
     }
 }

@@ -45,4 +45,29 @@ public class BadgeFindTest {
         /* Compare to Expected Values */
         assertEquals("#D2CC71D4 (Lawson, Matthew J)", b3.toString());
     }
+
+    /*
+     * @author Josh
+    */
+    @Test
+    public void testFindBadge4() {
+        BadgeDAO badgeDAO = daoFactory.getBadgeDAO();
+
+        /* Retrieve Badges from Database */
+        Badge b4 = badgeDAO.find("FF591F68");
+
+        /* Compare to Expected Values */
+        assertEquals("#FF591F68 (Miller, Robert K)", b4.toString());
+    }
+    
+    @Test
+    public void testFindBadge5() {
+        BadgeDAO badgeDAO = daoFactory.getBadgeDAO();
+
+        /* Retrieve Badges from Database */
+        Badge b5 = badgeDAO.find("ADD650A8");
+
+        /* Compare to Expected Values */
+        assertEquals("#ADD650A8 (Taylor, Jennifer T)", b5.toString());
+    }
 }

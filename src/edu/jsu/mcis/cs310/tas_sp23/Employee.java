@@ -25,11 +25,11 @@ public class Employee {
         this.firstname = firstname;
         this.lastname = lastname;
         this.middlename = middlename;
-        this.active=active;
-        this.badge=badge;
-        this.depart=depart;
-        this.shift=shift;
-        this.etype=etype;
+        this.active = active;
+        this.badge = badge;
+        this.depart = depart;
+        this.shift = shift;
+        this.etype = etype;
     }
      
     public int getId() {

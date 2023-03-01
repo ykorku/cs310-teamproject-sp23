@@ -15,6 +15,7 @@ public class PunchFindTest {
 
     @Test
     public void testFindPunches1() {
+        
         PunchDAO punchDAO = daoFactory.getPunchDAO();
 
         /* Retrieve Punches from Database */
@@ -43,6 +44,7 @@ public class PunchFindTest {
         assertEquals("#0FFA272B CLOCK OUT: MON 09/24/2018 17:30:04", p4.printOriginal());
         assertEquals("#FCE87D9F CLOCK OUT: TUE 09/18/2018 17:34:00", p5.printOriginal());
         assertEquals("#FCE87D9F CLOCK OUT: MON 08/20/2018 17:30:00", p6.printOriginal());
+        
     }
     
     @Test
@@ -59,5 +61,45 @@ public class PunchFindTest {
         assertEquals("#618072EA TIME OUT: FRI 08/10/2018 00:12:35", p7.printOriginal());
         assertEquals("#0886BF12 TIME OUT: THU 08/02/2018 06:06:38", p8.printOriginal());
         assertEquals("#67637925 TIME OUT: TUE 08/07/2018 23:12:34", p9.printOriginal());
+        
     }
+    
+        @Test
+    public void testFindPunches4() {
+
+        PunchDAO punchDAO = daoFactory.getPunchDAO();
+
+        /* Retrieve Punches from Database */
+
+        Punch p10 = punchDAO.find(154);
+        Punch p11 = punchDAO.find(3348);
+        Punch p12 = punchDAO.find(1734);
+
+        /* Compare to Expected Values */
+
+        assertEquals("#F1EE0555 CLOCK IN: WED 08/01/2018 06:48:50", p10.printOriginal());
+        assertEquals("#82A8539F CLOCK OUT: TUE 09/04/2018 16:32:39", p11.printOriginal());
+        assertEquals("#E06BE060 CLOCK IN: FRI 08/17/2018 11:55:59", p12.printOriginal());
+
+    }   
+    
+    @Test
+    public void testFindPunches5() {
+
+        PunchDAO punchDAO = daoFactory.getPunchDAO();
+
+        /* Retrieve Punches from Database */
+
+        Punch p13 = punchDAO.find(4032);
+        Punch p14 = punchDAO.find(4095);
+        Punch p15 = punchDAO.find(593);
+
+        /* Compare to Expected Values */
+        //593, 103, 'DFDFE648', 2018-08-06 16:32:41, 0
+        assertEquals("#9D527CFB CLOCK IN: TUE 09/11/2018 06:55:56", p13.printOriginal());
+        assertEquals("#CEA28723 CLOCK OUT: TUE 09/11/2018 12:03:51", p14.printOriginal());
+        assertEquals("#DFDFE648 CLOCK OUT: MON 08/06/2018 16:32:41", p15.printOriginal());
+
+    }
+    
 }

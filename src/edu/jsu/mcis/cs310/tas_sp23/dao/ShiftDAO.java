@@ -130,8 +130,8 @@ public class ShiftDAO {
                     rs = ps.getResultSet();
                     
                      if (rs.next()) {
-                        Integer shiftid=rs.getInt("shiftid");
-                        shift=find(shiftid);
+                        Integer shiftid = rs.getInt("shiftid");
+                        shift = find(shiftid);
                     }
                     
                 }

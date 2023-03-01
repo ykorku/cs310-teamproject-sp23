@@ -16,6 +16,7 @@ public class EmployeeFindTest {
 
     @Test
     public void testFindEmployee1() {
+        
         EmployeeDAO employeeDAO = daoFactory.getEmployeeDAO();
 
         /* Retrieve Employee from Database (by ID) */
@@ -23,10 +24,12 @@ public class EmployeeFindTest {
 
         /* Compare to Expected Values */
         assertEquals("ID #14: Donaldson, Kathleen C (#229324A4), Type: Full-Time, Department: Press, Active: 02/02/2017", e1.toString());
+        
     }
     
     @Test
     public void testFindEmployee2() {
+        
         EmployeeDAO employeeDAO = daoFactory.getEmployeeDAO();
         BadgeDAO badgeDAO = daoFactory.getBadgeDAO();
 
@@ -36,10 +39,12 @@ public class EmployeeFindTest {
 
         /* Compare to Expected Values */
         assertEquals("ID #82: Taylor, Jennifer T (#ADD650A8), Type: Full-Time, Department: Office, Active: 02/13/2016", e2.toString());
+        
     }
     
     @Test
     public void testFindEmployee3() {
+        
         EmployeeDAO employeeDAO = daoFactory.getEmployeeDAO();
 
         /* Retrieve Employee from Database (by ID) */
@@ -47,10 +52,12 @@ public class EmployeeFindTest {
 
         /* Compare to Expected Values */
         assertEquals("ID #127: Elliott, Nancy L (#EC531DE6), Type: Temporary / Part-Time, Department: Shipping, Active: 09/22/2015", e3.toString());
+        
     }
     
     @Test
     public void testFindEmployee4() {
+        
         EmployeeDAO employeeDAO = daoFactory.getEmployeeDAO();
         BadgeDAO badgeDAO = daoFactory.getBadgeDAO();
 
@@ -60,13 +67,12 @@ public class EmployeeFindTest {
 
         /* Compare to Expected Values */
         assertEquals("ID #93: Leist, Rodney J (#C1E4758D), Type: Temporary / Part-Time, Department: Warehouse, Active: 10/09/2015", e4.toString());
+        
     }
 
-    /*
-     * @author Josh
-    */
     @Test
     public void testFindEmployee5() {
+        
         EmployeeDAO employeeDAO = daoFactory.getEmployeeDAO();
         BadgeDAO badgeDAO = daoFactory.getBadgeDAO();
 
@@ -76,5 +82,7 @@ public class EmployeeFindTest {
 
         /* Compare to Expected Values */
         assertEquals("ID #31: Robinson, Lawrence D (#408B195F), Type: Temporary / Part-Time, Department: Hafting, Active: 01/26/2017", e5.toString());
+        
     }
+    
 }

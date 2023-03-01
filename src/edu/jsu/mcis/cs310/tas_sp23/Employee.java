@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package edu.jsu.mcis.cs310.tas_sp23;
 
 import java.time.LocalDateTime;
@@ -11,7 +7,9 @@ import java.time.format.DateTimeFormatter;
  *
  * @author yunus
  */
+
 public class Employee {
+    
      private final int id ;
      private final String firstname , lastname , middlename ;
      private final  LocalDateTime active ;
@@ -21,6 +19,7 @@ public class Employee {
      private final  EmployeeType  etype ;
 
     public Employee(int id, String firstname, String lastname, String middlename,LocalDateTime active, Badge badge, Department depart, Shift shift,EmployeeType etype) {
+        
         this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
@@ -30,26 +29,33 @@ public class Employee {
         this.depart = depart;
         this.shift = shift;
         this.etype = etype;
+        
     }
      
     public int getId() {
         return id;
     }
+    
     public String getFirstname() {
         return firstname;
     }
+    
     public String getMiddlename() {
         return firstname;
     }
+    
     public String getLastname() {
         return lastname;
     }
+    
     public LocalDateTime getActive() {
         return active;
     }
+    
     public Badge getBadge() {
         return badge;
     }
+    
     public Department getDepartment() {
         return depart;
     }
@@ -63,6 +69,7 @@ public class Employee {
     }
     
     //ID #31: Robinson, Lawrence D (#408B195F), Type: Temporary / Part-Time, Department: Hafting, Active: 01/26/2017
+    
     @Override
     public String toString() {
 

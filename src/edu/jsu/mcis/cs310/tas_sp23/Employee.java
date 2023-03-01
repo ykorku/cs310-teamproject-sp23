@@ -73,8 +73,8 @@ public class Employee {
 
         s.append("ID #").append(id).append(": ");
         s.append(lastname).append(", ").append(firstname).append(" ").append(middlename).append(" ");
-        s.append("(#").append(badge).append("), Type: ").append(etype).append(", ");
-        s.append("Department: ").append(depart).append(", Active: ").append(dateText);
+        s.append("(#").append(badge.getId()).append("), Type: ").append(etype).append(", ");
+        s.append("Department: ").append(depart.getDescription()).append(", Active: ").append(dateText);
 
         return s.toString();
 

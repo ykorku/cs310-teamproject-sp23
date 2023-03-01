@@ -14,7 +14,8 @@ import java.time.LocalDateTime;
 public class EmployeeDAO {
     
     private static final String QUERY_FIND_FROM_ID = "SELECT * FROM employee WHERE id = ?";
-
+    private static final String QUERY_FIND_FROM_BADGE = "SELECT * FROM employee WHERE badgeid = ?";
+    
     private final DAOFactory daoFactory;
     
     EmployeeDAO(DAOFactory daoFactory) {
@@ -45,6 +46,9 @@ public class EmployeeDAO {
 
                     while (rs.next()) {
                         
+                        int departid = rs.getInt("departmentid");
+                        int shiftid = rs.getInt("shiftid");
+                        
                         EmployeeDAO employeeDAO = new EmployeeDAO(daoFactory);
                         BadgeDAO badgeDAO = new BadgeDAO(daoFactory);
                         DepartmentDAO departmentDAO = new DepartmentDAO(daoFactory);
@@ -52,11 +56,11 @@ public class EmployeeDAO {
                         
                         String badgeId = rs.getString("badgeid");
                         Badge badge = badgeDAO.find(badgeId);
-                        Department department = departmentDAO.find(id);
+                        Department department = departmentDAO.find(departid);
                         Shift shift = shiftDAO.find(id);
                         
                         String firstname = rs.getString("firstname");
-                        String middlename = rs.getString("middle");
+                        String middlename = rs.getString("middlename");
                         String lastname = rs.getString("lastname");
                         
                         //Get eventtype. 
@@ -110,7 +114,7 @@ public class EmployeeDAO {
     
     public Employee find(Badge b) {
         
-       Employee employee = null;
+        Employee employee = null;
 
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -121,8 +125,8 @@ public class EmployeeDAO {
 
             if (conn.isValid(0)) {
 
-                ps = conn.prepareStatement(QUERY_FIND_FROM_ID);
-                ps.setObject(1, b.getId());
+                ps = conn.prepareStatement(QUERY_FIND_FROM_BADGE);
+                ps.setString(1, b.getId());
 
                 boolean hasresults = ps.execute();
 
@@ -131,8 +135,8 @@ public class EmployeeDAO {
                     rs = ps.getResultSet();
                     
                      if (rs.next()) {
-                        Integer employeeid = rs.getInt("employeeid");
-                        employee = find(employeeid);
+                        Integer id = rs.getInt("id");
+                        employee = find(id);
                     }
                     
                 }

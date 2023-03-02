@@ -50,11 +50,36 @@ public class ShiftFindTest {
         assertEquals("Shift 1 Early Lunch: 07:00 - 15:30 (510 minutes); Lunch: 11:30 - 12:00 (30 minutes)", s3.toString());
     }
     
-    /*
+    /**
      * @author Josh
+     * Extra test to check the overnight shift
     */
+    @Test
+    public void testFindShiftByID2() {
+        ShiftDAO shiftDAO = daoFactory.getShiftDAO();
+
+        /* Retrieve Shift Rulesets from Database */
+        Shift s4 = shiftDAO.find(4);
+
+        /* Compare to Expected Values */
+        assertEquals("Shift 3: 22:30 - 07:00 (510 minutes); Lunch: 02:30 - 03:00 (30 minutes)", s4.toString());
+    }
     
-    
+    // No employees on 3rd shift to test
+    @Test
+    public void testFindShiftByBadge2() {
+        ShiftDAO shiftDAO = daoFactory.getShiftDAO();
+        BadgeDAO badgeDAO = daoFactory.getBadgeDAO();
+
+        /* Create Badge Objects */
+        Badge b4 = badgeDAO.find("2305D772");
+
+        /* Retrieve Shift Rulesets from Database */
+        Shift s4 = shiftDAO.find(b4);
+
+        /* Compare to Expected Values */
+        assertEquals("Shift 1: 07:00 - 15:30 (510 minutes); Lunch: 12:00 - 12:30 (30 minutes)", s4.toString());
+    }
     
     /*
     @Test
@@ -98,8 +123,5 @@ public class ShiftFindTest {
         assertEquals("Shift 2: 12:00 - 20:30 (510 minutes); Lunch: 16:30 - 17:00 (30 minutes)", s2.toString());
         assertEquals("Shift 1 Early Lunch: 07:00 - 15:30 (510 minutes); Lunch: 11:30 - 12:00 (30 minutes)", s3.toString());
     }
-
-
-
     */
 }

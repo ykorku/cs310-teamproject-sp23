@@ -18,19 +18,15 @@ import java.util.HashMap;
  */
 public class ShiftDAO {
     
-    private static final String QUERY_FIND = "SELECT * FROM shift WHERE id = ?";
+    private static final String QUERY_FIND_ID = "SELECT * FROM shift WHERE id = ?";
     
-    private static final String QUERY_FIND1 = "SELECT * FROM employee WHERE badgeid = ?";
+    private static final String QUERY_FIND_BADGE = "SELECT * FROM employee WHERE badgeid = ?";
 
     private final DAOFactory daoFactory;
-    
-  
     
     ShiftDAO(DAOFactory aThis) {
         this.daoFactory = aThis;
     }
-
-    
     
     public Shift find(int i1) {
         
@@ -45,7 +41,7 @@ public class ShiftDAO {
 
             if (conn.isValid(0)) {
 
-                ps = conn.prepareStatement(QUERY_FIND);
+                ps = conn.prepareStatement(QUERY_FIND_ID);
                 ps.setInt(1, i1);
 
                 boolean hasresults = ps.execute();
@@ -54,8 +50,6 @@ public class ShiftDAO {
 
                     rs = ps.getResultSet();
                     
-                  
-
                     while (rs.next()) {
 
                         HashMap<String, String> shiftValues = new HashMap<>();
@@ -71,15 +65,10 @@ public class ShiftDAO {
                         shiftValues.put("lunchstop",  rs.getString("lunchstop"));
                         shiftValues.put("lunchthreshold",  rs.getString("lunchthreshold"));
                         
-                        
                         shift = new Shift(shiftValues);
                     }
-                  
-                    
                 }
-
             }
-
         } catch (SQLException e) {
 
             throw new DAOException(e.getMessage());
@@ -100,12 +89,9 @@ public class ShiftDAO {
                     throw new DAOException(e.getMessage());
                 }
             }
-
         }
-
         return shift;
     }
-    
     
     public Shift find(Badge b1) {
        
@@ -120,7 +106,7 @@ public class ShiftDAO {
 
             if (conn.isValid(0)) {
 
-                ps = conn.prepareStatement(QUERY_FIND1);
+                ps = conn.prepareStatement(QUERY_FIND_BADGE);
                 ps.setObject(1, b1.getId());
 
                 boolean hasresults = ps.execute();
@@ -133,15 +119,10 @@ public class ShiftDAO {
                         Integer shiftid = rs.getInt("shiftid");
                         shift = find(shiftid);
                     }
-                    
                 }
-
             }
-
         } catch (SQLException e) {
-
             throw new DAOException(e.getMessage());
-
         } finally {
 
             if (rs != null) {
@@ -158,11 +139,7 @@ public class ShiftDAO {
                     throw new DAOException(e.getMessage());
                 }
             }
-
         }
-
         return shift;
-        
     }
-    
 }

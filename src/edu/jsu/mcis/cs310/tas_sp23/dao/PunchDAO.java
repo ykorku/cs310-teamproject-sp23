@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 public class PunchDAO {
 
-    private static final String QUERY_FIND = "SELECT * FROM event WHERE id = ?";
+    private static final String QUERY_FIND_ID = "SELECT * FROM event WHERE id = ?";
 
     private final DAOFactory daoFactory;
 
@@ -29,7 +29,7 @@ public class PunchDAO {
 
             if (conn.isValid(0)) {
                 
-                ps = conn.prepareStatement(QUERY_FIND);
+                ps = conn.prepareStatement(QUERY_FIND_ID);
                 ps.setInt(1, id);
 
                 boolean hasresults = ps.execute();

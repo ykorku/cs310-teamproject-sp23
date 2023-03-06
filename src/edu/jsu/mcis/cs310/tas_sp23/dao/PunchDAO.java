@@ -5,6 +5,7 @@ import edu.jsu.mcis.cs310.tas_sp23.EventType;
 import edu.jsu.mcis.cs310.tas_sp23.Punch;
 import java.sql.*;
 import java.time.LocalDateTime;
+import java.time.*;
 
 public class PunchDAO {
 
@@ -94,6 +95,12 @@ public class PunchDAO {
 
         return punch;
 
+    }
+    
+    public Punch list(Badge b, LocalDate ts){
+        
+        
+        
     }
 
 }

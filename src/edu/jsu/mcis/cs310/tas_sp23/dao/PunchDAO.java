@@ -4,14 +4,13 @@ import edu.jsu.mcis.cs310.tas_sp23.Badge;
 import edu.jsu.mcis.cs310.tas_sp23.EventType;
 import edu.jsu.mcis.cs310.tas_sp23.Punch;
 import java.sql.*;
-import java.time.LocalDateTime;
 import java.time.*;
 import java.util.ArrayList;
 
 public class PunchDAO {
 
     private static final String QUERY_FIND_FROM_ID = "SELECT * FROM event WHERE id = ?";
-    private static final String QUERY_LIST_FROM_BADGE = "SELECT * FROM event WHERE badgeid = ? ORDER BY timestamp";
+    private static final String QUERY_LIST_FROM_BADGE = "SELECT * FROM event WHERE badgeid = ? AND timestamp between '?' and '?' ORDER BY timestamp;";
 
     private final DAOFactory daoFactory;
 
@@ -99,7 +98,7 @@ public class PunchDAO {
 
     }
     
-    public ArrayList list(Badge badge, LocalDate ts){
+    public ArrayList list(Badge badge, LocalDate day){
         
         ArrayList<Punch> punchArray = new ArrayList<Punch>();
 
@@ -108,12 +107,19 @@ public class PunchDAO {
 
         try {
 
-            Connection conn = daoFactory.getConnection();
+            Connection conn = daoFactory.getConnection();    
 
             if (conn.isValid(0)) {
                 
+                LocalDate dayPlusOne = day.plusDays(1); // Day 2 //
+                
+                
+                LocalDateTime ts2 = LocalDateTime.atTime(0, 0, 0);
+                
                 ps = conn.prepareStatement(QUERY_LIST_FROM_BADGE);
                 ps.setString(1, badge.getId()); 
+                ps.setTimestamp(2, ); // Day 1 //
+                ps.setTimestamp(3, ); // Day 2 //
 
                 boolean hasresults = ps.execute();
 

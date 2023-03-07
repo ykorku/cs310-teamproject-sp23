@@ -6,10 +6,12 @@ import edu.jsu.mcis.cs310.tas_sp23.Punch;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.*;
+import java.util.ArrayList;
 
 public class PunchDAO {
 
-    private static final String QUERY_FIND_ID = "SELECT * FROM event WHERE id = ?";
+    private static final String QUERY_FIND_FROM_ID = "SELECT * FROM event WHERE id = ?";
+    private static final String QUERY_LIST_FROM_BADGE = "SELECT * FROM event WHERE badgeid = ? ORDER BY timestamp";
 
     private final DAOFactory daoFactory;
 
@@ -30,7 +32,7 @@ public class PunchDAO {
 
             if (conn.isValid(0)) {
                 
-                ps = conn.prepareStatement(QUERY_FIND_ID);
+                ps = conn.prepareStatement(QUERY_FIND_FROM_ID);
                 ps.setInt(1, id);
 
                 boolean hasresults = ps.execute();
@@ -97,10 +99,68 @@ public class PunchDAO {
 
     }
     
-    public Punch list(Badge b, LocalDate ts){
+    public ArrayList list(Badge badge, LocalDate ts){
         
-        
+        ArrayList<Punch> punchArray = new ArrayList<Punch>();
+
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+
+            Connection conn = daoFactory.getConnection();
+
+            if (conn.isValid(0)) {
+                
+                ps = conn.prepareStatement(QUERY_LIST_FROM_BADGE);
+                ps.setString(1, badge.getId()); 
+
+                boolean hasresults = ps.execute();
+
+                if (hasresults) {
+
+                    rs = ps.getResultSet();
+
+                    while (rs.next()) {
+                        
+                       int id = rs.getInt("id");
+                       int terminalid = rs.getInt("terminalid");
+                       // timestamp retrieve here but not sure //
+                       int eventtypeid = rs.getInt("eventtypeid");
+                       EventType punchtype = EventType.values()[eventtypeid];
+                       
+                       Punch punch = new Punch(id, terminalid, badge, originalTimeStamp, punchtype); // ts from passed parameter okay to use? //
+
+                    }
+
+                }
+
+            }
+
+        } catch (SQLException e) {
+
+            throw new DAOException(e.getMessage());
+
+        } finally {
+
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    throw new DAOException(e.getMessage());
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException e) {
+                    throw new DAOException(e.getMessage());
+                }
+            }
+
+        }
+
+        return punchArray;
         
     }
-
 }

@@ -146,7 +146,7 @@ public class PunchDAO {
                      
                     int lastIndex = punchArray.size();
                     
-                    Punch lastPunchIndex = punchArray.get(lastIndex);
+                    Punch lastPunchIndex = punchArray.get(lastIndex - 1);
                     
                     EventType lastPunch = lastPunchIndex.getPunchtype();
                     
@@ -161,21 +161,23 @@ public class PunchDAO {
                         ps.setString(1, badge.getId()); 
                         ps.setTimestamp(2, ts2); // Day 1 //
                         ps.setTimestamp(3, ts3); // Day 2 //
-                        
-                        if (hasresults){
+                        boolean hasresults2 = ps.execute();
+                        if (hasresults2){
                             
-                            rs = ps.getResultSet();
-                            
-                            int id = rs.getInt("id");
-                       
-                            Punch firstPunchDay3 = punchDAO.find(id);
-                       
-                            EventType firstPunchOfDay = firstPunchDay3.getPunchtype();
-                            
-                            if ((firstPunchOfDay.equals(EventType.CLOCK_OUT)) || (firstPunchOfDay.equals(EventType.TIME_OUT))){
-                                
-                                punchArray.add(firstPunchDay3);
-                                
+                            while(rs.next()) {
+                                rs = ps.getResultSet();
+
+                                int id = rs.getInt("id");
+
+                                Punch firstPunchDay3 = punchDAO.find(id);
+
+                                EventType firstPunchOfDay = firstPunchDay3.getPunchtype();
+
+                                if ((firstPunchOfDay.equals(EventType.CLOCK_OUT)) || (firstPunchOfDay.equals(EventType.TIME_OUT))){
+
+                                    punchArray.add(firstPunchDay3);
+
+                                }
                             }
                             
                         }

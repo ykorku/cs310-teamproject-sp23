@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class PunchDAO {
 
     private static final String QUERY_FIND_FROM_ID = "SELECT * FROM event WHERE id = ?";
-    private static final String QUERY_LIST_FROM_BADGE = "SELECT * FROM event WHERE badgeid = ? AND timestamp between '?' and '?' ORDER BY timestamp;";
+    private static final String QUERY_LIST_FROM_BADGE = "SELECT * FROM event WHERE badgeid = ? AND timestamp between ? and ? ORDER BY timestamp;";
 
     private final DAOFactory daoFactory;
 

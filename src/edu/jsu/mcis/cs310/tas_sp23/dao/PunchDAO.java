@@ -111,8 +111,6 @@ public class PunchDAO {
             Connection conn = daoFactory.getConnection();    
 
             if (conn.isValid(0)) {                
-               
-                LocalDate dayPlusOne = day.plusDays(1); //Gets the next day for a range for query.
                 
                 ps = conn.prepareStatement(QUERY_LIST_FROM_BADGE);
                 ps.setString(1, badge.getId()); 
@@ -148,7 +146,7 @@ public class PunchDAO {
                         //Check one day past previous range. 
 
                         ps.setString(1, badge.getId()); 
-                        ps.setDate(2, java.sql.Date.valueOf(dayPlusOne)); // Day 2 //
+                        ps.setDate(2, java.sql.Date.valueOf(day)); // Day 2 //
                         
                         boolean hasresults2 = ps.execute();
                         

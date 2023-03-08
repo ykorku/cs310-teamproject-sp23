@@ -21,15 +21,6 @@ public class Main {
         // output should be "Test Badge: #31A25435 (Munday, Paul J)"
 
         System.err.println("Test Badge: " + b.toString());
-        
-        PunchDAO punchDAO = daoFactory.getPunchDAO();
-        
-        Badge b2 = badgeDAO.find("67637925");
-        LocalDate ts = LocalDate.of(2018, Month.SEPTEMBER, 17);
-        
-        ArrayList<Punch> p1 = punchDAO.list(b, ts);
-        
-        System.out.println(p1);
-        
+    
     }
 }

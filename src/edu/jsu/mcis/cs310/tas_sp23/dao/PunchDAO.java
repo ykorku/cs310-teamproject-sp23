@@ -99,9 +99,9 @@ public class PunchDAO {
 
     }
     
-    public ArrayList list(Badge badge, LocalDate day){
+    public ArrayList list (Badge badge, LocalDate day){
 
-        ArrayList<Punch> punchArray = new ArrayList<Punch>();
+        ArrayList<Punch> punchArray = new ArrayList<>();
         
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -110,10 +110,11 @@ public class PunchDAO {
 
             Connection conn = daoFactory.getConnection();    
 
-            if (conn.isValid(0)) {
-                
+            if (conn.isValid(0)) {                
                
-                LocalDate dayPlusOne = day.plusDays(1); // Day 2 //
+                LocalDate dayPlusOne = day.plusDays(1); //Gets the next day for a range for query.
+                
+                //Must be timestamp for query.
                 
                 LocalDateTime dayWithTime = day.atTime(0, 0);
                 java.sql.Timestamp ts = java.sql.Timestamp.valueOf(dayWithTime);
@@ -136,48 +137,51 @@ public class PunchDAO {
                     
                     while (rs.next()) {
                         
-                       int id = rs.getInt("id");
-                       
-                       Punch punch = punchDAO.find(id);
-                       
+                       int id = rs.getInt("id");                       
+                       Punch punch = punchDAO.find(id);                      
                        punchArray.add(punch);
 
                     }
-                     
-                    int lastIndex = punchArray.size();
                     
+                    //If last punch is CLOCK_IN, next day must be checked for closing pair.
+                    
+                    int lastIndex = punchArray.size();                    
                     Punch lastPunchIndex = punchArray.get(lastIndex - 1);
                     
                     EventType lastPunch = lastPunchIndex.getPunchtype();
-                    
-                    if (lastPunch.equals(EventType.CLOCK_IN)){
+
+                    if (lastPunch == EventType.CLOCK_IN) {
                         
                         ps = conn.prepareStatement(QUERY_LIST_NEXT_DAY);
+                        
+                        //Check one day past previous range. 
                         
                         LocalDate dayPlusTwo = day.plusDays(2);
                         LocalDateTime day3WithTime = dayPlusTwo.atTime(0, 0);               
                         java.sql.Timestamp ts3 = java.sql.Timestamp.valueOf(day3WithTime);
-                        
+
                         ps.setString(1, badge.getId()); 
-                        ps.setTimestamp(2, ts2); // Day 1 //
-                        ps.setTimestamp(3, ts3); // Day 2 //
+                        ps.setTimestamp(2, ts2); // Day 2 //
+                        ps.setTimestamp(3, ts3); // Day 3 //
+                        
                         boolean hasresults2 = ps.execute();
-                        if (hasresults2){
+                        
+                        if (hasresults2) {
                             
-                            while(rs.next()) {
-                                rs = ps.getResultSet();
-
+                            rs = ps.getResultSet();
+                            
+                            while (rs.next()) {
+                                
+                                //Find punch type of next day.
+                                
                                 int id = rs.getInt("id");
-
-                                Punch firstPunchDay3 = punchDAO.find(id);
-
+                                Punch firstPunchDay3 = punchDAO.find(id);                               
                                 EventType firstPunchOfDay = firstPunchDay3.getPunchtype();
-
-                                if ((firstPunchOfDay.equals(EventType.CLOCK_OUT)) || (firstPunchOfDay.equals(EventType.TIME_OUT))){
-
+                                
+                                if ((firstPunchOfDay == EventType.CLOCK_OUT) || (firstPunchOfDay == EventType.TIME_OUT)) {
                                     punchArray.add(firstPunchDay3);
-
                                 }
+                            
                             }
                             
                         }

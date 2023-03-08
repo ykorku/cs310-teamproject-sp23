@@ -111,15 +111,19 @@ public class PunchDAO {
 
             if (conn.isValid(0)) {
                 
+               
                 LocalDate dayPlusOne = day.plusDays(1); // Day 2 //
                 
+                LocalDateTime dayWithTime = day.atTime(0, 0);
+                java.sql.Timestamp ts = java.sql.Timestamp.valueOf(dayWithTime);
                 
-                LocalDateTime ts2 = LocalDateTime.atTime(0, 0, 0);
+                LocalDateTime day2WithTime = dayPlusOne.atTime(0, 0);               
+                java.sql.Timestamp ts2 = java.sql.Timestamp.valueOf(day2WithTime);
                 
                 ps = conn.prepareStatement(QUERY_LIST_FROM_BADGE);
                 ps.setString(1, badge.getId()); 
-                ps.setTimestamp(2, ); // Day 1 //
-                ps.setTimestamp(3, ); // Day 2 //
+                ps.setTimestamp(2, ts); // Day 1 //
+                ps.setTimestamp(3, ts2); // Day 2 //
 
                 boolean hasresults = ps.execute();
 

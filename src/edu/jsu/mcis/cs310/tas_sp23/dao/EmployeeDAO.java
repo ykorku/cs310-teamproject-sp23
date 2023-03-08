@@ -45,51 +45,40 @@ public class EmployeeDAO {
                     while (rs.next()) {
                         
                         //Get name.
-                        
                         String firstname = rs.getString("firstname");
                         String middlename = rs.getString("middlename");
                         String lastname = rs.getString("lastname");
                         
-                        //Get timestamp from database. It must be casted into LocalDateTime. 
-                        
+                        //Get timestamp from database. It must be casted into LocalDateTime.
                         java.sql.Timestamp timestamp = new Timestamp(new java.util.Date().getTime());
                         timestamp = rs.getTimestamp("active");
                         LocalDateTime active = timestamp.toLocalDateTime();
                         
                         //Get Badge object.
-                        
                         BadgeDAO badgeDAO = new BadgeDAO(daoFactory);
                         String badgeId = rs.getString("badgeid");
                         Badge badge = badgeDAO.find(badgeId);
                         
                         //Get department object
-                        
                         DepartmentDAO departmentDAO = new DepartmentDAO(daoFactory);
                         int departid = rs.getInt("departmentid");
                         Department department = departmentDAO.find(departid);
                         
                         //Get shift object.
-                        
                         ShiftDAO shiftDAO = new ShiftDAO(daoFactory);
                         int shiftId = rs.getInt("shiftid");
                         Shift shift = shiftDAO.find(shiftId);
                                 
-                        //Get eventtype. 
-                        
+                        //Get eventtype.
                         int employeeTypeId = rs.getInt("employeetypeid");
                         EmployeeType employeetype = EmployeeType.values()[employeeTypeId];
   
 
                         //create employee object.
-                        
                         employee = new Employee(id, firstname, lastname, middlename, active, badge, department, shift, employeetype);
-                        
                     }
-
                 }
-
             }
-
         } catch (SQLException e) {
 
             throw new DAOException(e.getMessage());
@@ -110,12 +99,8 @@ public class EmployeeDAO {
                     throw new DAOException(e.getMessage());
                 }
             }
-
         }
-
         return employee;
-        
-     
     }
     
     public Employee find(Badge b) {
@@ -144,13 +129,9 @@ public class EmployeeDAO {
                          
                         Integer id = rs.getInt("id");
                         employee = find(id);
-                        
                     }
-                    
                 }
-
             }
-
         } catch (SQLException e) {
 
             throw new DAOException(e.getMessage());
@@ -171,11 +152,7 @@ public class EmployeeDAO {
                     throw new DAOException(e.getMessage());
                 }
             }
-
         }
-
-        return employee; 
-        
+        return employee;
     }
-    
 }

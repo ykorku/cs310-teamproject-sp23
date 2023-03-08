@@ -10,8 +10,8 @@ import java.util.ArrayList;
 public class PunchDAO {
 
     private static final String QUERY_FIND_FROM_ID = "SELECT * FROM event WHERE id = ?";
-    private static final String QUERY_LIST_FROM_BADGE = "SELECT * FROM event WHERE badgeid = ? AND timestamp between ? and ? ORDER BY timestamp;";
-    private static final String QUERY_LIST_NEXT_DAY = "SELECT * FROM event WHERE badgeid = ? AND timestamp between ? and ? ORDER BY timestamp;";
+    private static final String QUERY_LIST_FROM_BADGE = "SELECT *, DATE(`timestamp`) AS tsdate FROM event WHERE badgeid = ? HAVING tsdate = ? ORDER BY 'timestamp';";
+    private static final String QUERY_LIST_NEXT_DAY = "SELECT *, DATE(`timestamp`) AS tsdate FROM event WHERE badgeid = ? HAVING tsdate > ? ORDER BY 'timestamp' LIMIT 1;";
 
     private final DAOFactory daoFactory;
 
@@ -114,18 +114,9 @@ public class PunchDAO {
                
                 LocalDate dayPlusOne = day.plusDays(1); //Gets the next day for a range for query.
                 
-                //Must be timestamp for query.
-                
-                LocalDateTime dayWithTime = day.atTime(0, 0);
-                java.sql.Timestamp ts = java.sql.Timestamp.valueOf(dayWithTime);
-                
-                LocalDateTime day2WithTime = dayPlusOne.atTime(0, 0);               
-                java.sql.Timestamp ts2 = java.sql.Timestamp.valueOf(day2WithTime);
-                
                 ps = conn.prepareStatement(QUERY_LIST_FROM_BADGE);
                 ps.setString(1, badge.getId()); 
-                ps.setTimestamp(2, ts); // Day 1 //
-                ps.setTimestamp(3, ts2); // Day 2 //
+                ps.setDate(2, java.sql.Date.valueOf(day));// Day 1 //
 
                 boolean hasresults = ps.execute();
 
@@ -155,14 +146,9 @@ public class PunchDAO {
                         ps = conn.prepareStatement(QUERY_LIST_NEXT_DAY);
                         
                         //Check one day past previous range. 
-                        
-                        LocalDate dayPlusTwo = day.plusDays(2);
-                        LocalDateTime day3WithTime = dayPlusTwo.atTime(0, 0);               
-                        java.sql.Timestamp ts3 = java.sql.Timestamp.valueOf(day3WithTime);
 
                         ps.setString(1, badge.getId()); 
-                        ps.setTimestamp(2, ts2); // Day 2 //
-                        ps.setTimestamp(3, ts3); // Day 3 //
+                        ps.setDate(2, java.sql.Date.valueOf(dayPlusOne)); // Day 2 //
                         
                         boolean hasresults2 = ps.execute();
                         

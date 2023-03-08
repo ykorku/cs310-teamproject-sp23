@@ -11,6 +11,7 @@ public class PunchDAO {
 
     private static final String QUERY_FIND_FROM_ID = "SELECT * FROM event WHERE id = ?";
     private static final String QUERY_LIST_FROM_BADGE = "SELECT * FROM event WHERE badgeid = ? AND timestamp between ? and ? ORDER BY timestamp;";
+    private static final String QUERY_LIST_NEXT_DAY = "SELECT * FROM event WHERE badgeid = ? AND timestamp between ? and ? ORDER BY timestamp;";
 
     private final DAOFactory daoFactory;
 
@@ -100,7 +101,7 @@ public class PunchDAO {
     
     public ArrayList list(Badge badge, LocalDate day){
 
-         ArrayList<Punch> punchArray = new ArrayList<Punch>();
+        ArrayList<Punch> punchArray = new ArrayList<Punch>();
         
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -142,7 +143,45 @@ public class PunchDAO {
                        punchArray.add(punch);
 
                     }
-
+                     
+                    int lastIndex = punchArray.size();
+                    
+                    Punch lastPunchIndex = punchArray.get(lastIndex);
+                    
+                    EventType lastPunch = lastPunchIndex.getPunchtype();
+                    
+                    if (lastPunch.equals(EventType.CLOCK_IN)){
+                        
+                        ps = conn.prepareStatement(QUERY_LIST_NEXT_DAY);
+                        
+                        LocalDate dayPlusTwo = day.plusDays(2);
+                        LocalDateTime day3WithTime = dayPlusTwo.atTime(0, 0);               
+                        java.sql.Timestamp ts3 = java.sql.Timestamp.valueOf(day3WithTime);
+                        
+                        ps.setString(1, badge.getId()); 
+                        ps.setTimestamp(2, ts2); // Day 1 //
+                        ps.setTimestamp(3, ts3); // Day 2 //
+                        
+                        if (hasresults){
+                            
+                            rs = ps.getResultSet();
+                            
+                            int id = rs.getInt("id");
+                       
+                            Punch firstPunchDay3 = punchDAO.find(id);
+                       
+                            EventType firstPunchOfDay = firstPunchDay3.getPunchtype();
+                            
+                            if ((firstPunchOfDay.equals(EventType.CLOCK_OUT)) || (firstPunchOfDay.equals(EventType.TIME_OUT))){
+                                
+                                punchArray.add(firstPunchDay3);
+                                
+                            }
+                            
+                        }
+                        
+                    }
+                    
                 }
 
             }

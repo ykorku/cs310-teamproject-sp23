@@ -2,6 +2,11 @@ package edu.jsu.mcis.cs310.tas_sp23;
 
 import edu.jsu.mcis.cs310.tas_sp23.dao.BadgeDAO;
 import edu.jsu.mcis.cs310.tas_sp23.dao.DAOFactory;
+import edu.jsu.mcis.cs310.tas_sp23.dao.PunchDAO;
+import java.time.LocalDate;
+import java.time.Month;
+import java.util.ArrayList;
+
 
 public class Main {
     public static void main(String[] args) {
@@ -17,6 +22,14 @@ public class Main {
 
         System.err.println("Test Badge: " + b.toString());
         
+        PunchDAO punchDAO = daoFactory.getPunchDAO();
+        
+        Badge b2 = badgeDAO.find("67637925");
+        LocalDate ts = LocalDate.of(2018, Month.SEPTEMBER, 17);
+        
+        ArrayList<Punch> p1 = punchDAO.list(b, ts);
+        
+        System.out.println(p1);
         
     }
 }

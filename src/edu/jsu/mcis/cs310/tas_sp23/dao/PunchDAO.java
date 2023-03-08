@@ -99,9 +99,9 @@ public class PunchDAO {
     }
     
     public ArrayList list(Badge badge, LocalDate day){
-        
-        ArrayList<Punch> punchArray = new ArrayList<Punch>();
 
+         ArrayList<Punch> punchArray = new ArrayList<Punch>();
+        
         PreparedStatement ps = null;
         ResultSet rs = null;
 
@@ -130,16 +130,16 @@ public class PunchDAO {
                 if (hasresults) {
 
                     rs = ps.getResultSet();
-
+                    
+                    PunchDAO punchDAO = new PunchDAO(daoFactory);
+                    
                     while (rs.next()) {
                         
                        int id = rs.getInt("id");
-                       int terminalid = rs.getInt("terminalid");
-                       // timestamp retrieve here but not sure //
-                       int eventtypeid = rs.getInt("eventtypeid");
-                       EventType punchtype = EventType.values()[eventtypeid];
                        
-                       Punch punch = new Punch(id, terminalid, badge, originalTimeStamp, punchtype); // ts from passed parameter okay to use? //
+                       Punch punch = punchDAO.find(id);
+                       
+                       punchArray.add(punch);
 
                     }
 

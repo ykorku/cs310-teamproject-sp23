@@ -62,13 +62,9 @@ public class PunchDAO {
                         //create punch variable.
                         
                         punch = new Punch(id, terminalid, badge, originalTimeStamp, punchtype);
-
                     }
-
                 }
-
             }
-
         } catch (SQLException e) {
 
             throw new DAOException(e.getMessage());
@@ -89,11 +85,7 @@ public class PunchDAO {
                     throw new DAOException(e.getMessage());
                 }
             }
-
         }
-
         return punch;
-
     }
-
 }

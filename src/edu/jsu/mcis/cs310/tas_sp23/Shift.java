@@ -64,16 +64,18 @@ public class Shift {
     public int getDockpenalty() {
         return dockpenalty;
     }
+    
     public LocalTime getLunchstart() {
         return lunchstart;
     }
+    
     public LocalTime getLunchstop() {
         return lunchstop;
     }
+    
     public int getLunchthreshold() {
         return lunchthreshold;
     }
-    
     
     @Override
     public String toString() {
@@ -91,12 +93,16 @@ public class Shift {
         }
         long workDuration = duration.toMinutes();
         
-        s.append(shiftstart).append(" - ").append(shiftstop).append(" (").append(workDuration).append(" minutes").append(")").append("; ");
+        s.append(shiftstart).append(" - ").append(shiftstop)
+                .append(" (").append(workDuration)
+                .append(" minutes").append(")").append("; ");
         
         Duration lunchDuration = Duration.between(lunchstart, lunchstop);
         long lduration = lunchDuration.toMinutes();
         
-        s.append("Lunch: ").append(lunchstart).append(" - ").append(lunchstop).append(" ").append("(").append(lduration).append(" minutes").append(")");
+        s.append("Lunch: ").append(lunchstart).append(" - ")
+                .append(lunchstop).append(" ").append("(")
+                .append(lduration).append(" minutes").append(")");
         System.out.println(s.toString());
         return s.toString();
     }

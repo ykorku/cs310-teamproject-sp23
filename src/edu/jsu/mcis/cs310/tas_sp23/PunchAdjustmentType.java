@@ -20,5 +20,4 @@ public enum PunchAdjustmentType {
     public String toString() {
         return description;
     }
-
 }

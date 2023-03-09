@@ -3,11 +3,6 @@ package edu.jsu.mcis.cs310.tas_sp23;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-/**
- *
- * @author yunus
- */
-
 public class Employee {
     
      private final int id ;
@@ -18,8 +13,9 @@ public class Employee {
      private final  Shift  shift ;
      private final  EmployeeType  etype ;
 
-    public Employee(int id, String firstname, String lastname, String middlename,LocalDateTime active, Badge badge, Department depart, Shift shift,EmployeeType etype) {
-        
+    public Employee(int id, String firstname, String lastname,
+            String middlename, LocalDateTime active, Badge badge,
+            Department depart, Shift shift, EmployeeType etype) {
         this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
@@ -29,7 +25,6 @@ public class Employee {
         this.depart = depart;
         this.shift = shift;
         this.etype = etype;
-        
     }
      
     public int getId() {
@@ -68,8 +63,6 @@ public class Employee {
         return etype;
     }
     
-    //ID #31: Robinson, Lawrence D (#408B195F), Type: Temporary / Part-Time, Department: Hafting, Active: 01/26/2017
-    
     @Override
     public String toString() {
 
@@ -84,7 +77,5 @@ public class Employee {
         s.append("Department: ").append(depart.getDescription()).append(", Active: ").append(dateText);
 
         return s.toString();
-
     }
-    
 }

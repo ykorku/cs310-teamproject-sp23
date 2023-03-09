@@ -6,6 +6,7 @@ import edu.jsu.mcis.cs310.tas_sp23.Punch;
 import java.sql.*;
 import java.time.*;
 import java.util.ArrayList;
+import java.util.TimeZone;
 
 public class PunchDAO {
 
@@ -25,6 +26,8 @@ public class PunchDAO {
 
         PreparedStatement ps = null;
         ResultSet rs = null;
+        boolean dst = TimeZone.getDefault().observesDaylightTime();
+        LocalDateTime originalTimeStamp;
 
         try {
 
@@ -60,18 +63,18 @@ public class PunchDAO {
                         
                         java.sql.Timestamp timestamp = new Timestamp(new java.util.Date().getTime());
                         timestamp = rs.getTimestamp("timestamp");
-                        LocalDateTime originalTimeStamp = timestamp.toLocalDateTime();  
+                        if (dst) {
+                            originalTimeStamp = timestamp.toLocalDateTime().minusHours(1);
+                        } else {
+                            originalTimeStamp = timestamp.toLocalDateTime();
+                        }
 
                         //create punch variable.
                         
                         punch = new Punch(id, terminalid, badge, originalTimeStamp, punchtype);
-
                     }
-
                 }
-
             }
-
         } catch (SQLException e) {
 
             throw new DAOException(e.getMessage());
@@ -92,11 +95,8 @@ public class PunchDAO {
                     throw new DAOException(e.getMessage());
                 }
             }
-
         }
-
         return punch;
-
     }
     
     public ArrayList list (Badge badge, LocalDate day){

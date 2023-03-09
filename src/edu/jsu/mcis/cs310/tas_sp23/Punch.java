@@ -3,6 +3,7 @@ package edu.jsu.mcis.cs310.tas_sp23;
 import java.time.*;
 import java.time.temporal.ChronoUnit;
 import java.time.format.DateTimeFormatter;
+import java.util.TimeZone;
 
 public class Punch {
 
@@ -79,17 +80,20 @@ public class Punch {
     }
 
     private LocalDateTime round_time(LocalDateTime original) {
+        LocalDateTime temp = original;
         int sec = original.toLocalTime().getSecond();
+        TimeZone tz = TimeZone.getDefault();
         
         if(sec >= 30) {
-            original = original.plusMinutes(1);
+            temp = original.plusMinutes(1);
         }
         
-        return original;
+        return temp;
     }
 
     public void adjust(Shift s) {
         LocalDateTime rndDateTime = round_time(getOriginaltimestamp());
+        
         LocalTime original_time = rndDateTime.toLocalTime()
                 .truncatedTo(ChronoUnit.MINUTES);
         LocalDate original_date = rndDateTime.toLocalDate();
@@ -122,25 +126,20 @@ public class Punch {
                 case "CLOCK IN":
                     // Adjust lunch punch in to end of lunch
                     if (original_time.isAfter(lunchStart) && original_time.isBefore(lunchStop)) {
-                        System.out.println("1st if");
                         adjustedTimeStamp = LocalDateTime.
                                 of(original_date, lunchStop);
                         adjustmentType = adjustmentType.LUNCH_STOP;
                     // Punch between 15 min before and 5 min after shift start
                     } else if (original_time.isAfter(startRound) && original_time.isBefore(startGrace)) {
-                        System.out.println("2nd if");
                         adjustedTimeStamp = LocalDateTime
                                 .of(original_date, s.getShiftstart());
                         adjustmentType = adjustmentType.SHIFT_START;
                     // Punch more than 15 mins before shift start
                     } else if (original_time.isBefore(startRound)) {
-                        System.out.println("3rd if");
                         adjustedTimeStamp = LocalDateTime.of(original_date,
                                 over_schedule(original_time,
                                         s.getRoundinterval()));
                     } else if (original_time.isAfter(startGrace) || original_time.equals(startDock)) {
-                        System.out.println("4th if");
-                        
                         adjustedTimeStamp = LocalDateTime.of(original_date, startDock);
                         adjustmentType = adjustmentType.SHIFT_DOCK;
                     }
@@ -148,24 +147,19 @@ public class Punch {
                 case "CLOCK OUT":
                     // Adjust lunch punch out to beginning of lunch
                     if (original_time.isAfter(lunchStart) && original_time.isBefore(lunchStop)) {
-                        System.out.println("1st if");
                         adjustedTimeStamp = LocalDateTime.of(original_date, lunchStart);
                         adjustmentType = adjustmentType.LUNCH_START;
                     // Punch between 15 min after and 5 min before shift ends
                     } else if (original_time.isAfter(stopGrace) && original_time.isBefore(stopRound)) {
-                        System.out.println("2nd if");
                         adjustedTimeStamp = LocalDateTime
                                 .of(original_date, s.getShiftstop());
                         adjustmentType = adjustmentType.SHIFT_STOP;
                     // Punch more than 15 mins after shift end
                     } else if (original_time.isAfter(stopRound)) {
-                        System.out.println("3rd if");
                         adjustedTimeStamp = LocalDateTime.of(original_date,
                                 over_schedule(original_time,
                                         s.getRoundinterval()));
                     } else if (original_time.isBefore(stopGrace)) {
-                        System.out.println("4th if");
-                        
                         adjustedTimeStamp = LocalDateTime.of(original_date, stopDock);
                         if (adjustedTimeStamp.isAfter(rndDateTime)) {
                             adjustmentType = adjustmentType.INTERVAL_ROUND;

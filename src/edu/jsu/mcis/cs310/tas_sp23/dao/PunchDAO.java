@@ -5,6 +5,7 @@ import edu.jsu.mcis.cs310.tas_sp23.EventType;
 import edu.jsu.mcis.cs310.tas_sp23.Punch;
 import java.sql.*;
 import java.time.LocalDateTime;
+import java.util.TimeZone;
 
 public class PunchDAO {
 
@@ -22,6 +23,8 @@ public class PunchDAO {
 
         PreparedStatement ps = null;
         ResultSet rs = null;
+        boolean dst = TimeZone.getDefault().observesDaylightTime();
+        LocalDateTime originalTimeStamp;
 
         try {
 
@@ -57,7 +60,11 @@ public class PunchDAO {
                         
                         java.sql.Timestamp timestamp = new Timestamp(new java.util.Date().getTime());
                         timestamp = rs.getTimestamp("timestamp");
-                        LocalDateTime originalTimeStamp = timestamp.toLocalDateTime();  
+                        if (dst) {
+                            originalTimeStamp = timestamp.toLocalDateTime().minusHours(1);
+                        } else {
+                            originalTimeStamp = timestamp.toLocalDateTime();
+                        }
 
                         //create punch variable.
                         

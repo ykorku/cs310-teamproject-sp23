@@ -2,6 +2,7 @@ package edu.jsu.mcis.cs310.tas_sp23.dao;
 
 import java.time.*;
 import java.util.*;
+import java.time.temporal.ChronoUnit;
 import edu.jsu.mcis.cs310.tas_sp23.EventType;
 import edu.jsu.mcis.cs310.tas_sp23.Punch;
 import edu.jsu.mcis.cs310.tas_sp23.Shift;
@@ -54,18 +55,17 @@ public final class DAOUtility {
                     }
                 } 
                 
-                if(in.isAfter(lunchin)&&in.isBefore(lunchout)){
+                if (out != null){
+                    if(in.equals(lunchin)&&out.equals(lunchout)){
                         lunchused=true;
                     }
-                    if(out.isAfter(lunchin) && out.isBefore(lunchout)){
+                    if(in.isAfter(lunchin)&&in.isBefore(lunchout)){
                         lunchused=true;
                     }
-                    if(in.equals(lunchin) && in.equals(lunchout)){
+                    if(out.isAfter(lunchin)&&out.isBefore(lunchout)){
                         lunchused=true;
                     }
-                    if(out.equals(lunchin) && out.equals(lunchout)){
-                        lunchused=true;
-                    }
+                }
                 
 
                 if (out != null) {

@@ -63,7 +63,7 @@ public class PunchDAO {
                         
                         java.sql.Timestamp timestamp = new Timestamp(new java.util.Date().getTime());
                         timestamp = rs.getTimestamp("timestamp");
-                        if (dst) {
+                        if (!dst) {
                             originalTimeStamp = timestamp.toLocalDateTime().minusHours(1);
                         } else {
                             originalTimeStamp = timestamp.toLocalDateTime();

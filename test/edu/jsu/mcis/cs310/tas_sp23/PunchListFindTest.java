@@ -249,6 +249,10 @@ public class PunchListFindTest {
         p2.add(punchDAO.find(4811));
         p2.add(punchDAO.find(4813));
         p2.add(punchDAO.find(4847));
+        p2.add(punchDAO.find(4884));
+        p2.add(punchDAO.find(4949));
+        p2.add(punchDAO.find(5018));
+        p2.add(punchDAO.find(5132));
 
         /* Export Punch List #2 Contents to StringBuilder */
         for (Punch p : p2) {

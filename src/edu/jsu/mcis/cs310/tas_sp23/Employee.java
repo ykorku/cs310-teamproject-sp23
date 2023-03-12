@@ -5,13 +5,13 @@ import java.time.format.DateTimeFormatter;
 
 public class Employee {
     
-     private final int id ;
-     private final String firstname , lastname , middlename ;
-     private final  LocalDateTime active ;
-     private final  Badge  badge;
-     private final  Department  depart ;
-     private final  Shift  shift ;
-     private final  EmployeeType  etype ;
+    private final int id;
+    private final String firstname, lastname, middlename;
+    private final LocalDateTime active;
+    private final Badge badge;
+    private final Department depart;
+    private final Shift shift;
+    private final EmployeeType etype;
 
     public Employee(int id, String firstname, String lastname,
             String middlename, LocalDateTime active, Badge badge,

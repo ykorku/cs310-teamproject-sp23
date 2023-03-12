@@ -17,9 +17,12 @@ public class Punch {
 
     public Punch(int terminalid, Badge badge, EventType punchtype) {
         
+        LocalDateTime systemTime = LocalDateTime.now();
         this.terminalid = terminalid;
         this.badge = badge;
         this.punchtype = punchtype;
+        this.originalTimeStamp = systemTime;
+        
     }
 
     public Punch(int id, int terminalid, Badge badge,

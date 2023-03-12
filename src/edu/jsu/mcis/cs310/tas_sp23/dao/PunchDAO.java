@@ -6,7 +6,6 @@ import edu.jsu.mcis.cs310.tas_sp23.Punch;
 import java.sql.*;
 import java.time.*;
 import java.util.ArrayList;
-import java.util.TimeZone;
 
 public class PunchDAO {
 
@@ -26,7 +25,6 @@ public class PunchDAO {
 
         PreparedStatement ps = null;
         ResultSet rs = null;
-        boolean dst = TimeZone.getDefault().observesDaylightTime();
         LocalDateTime originalTimeStamp;
 
         try {
@@ -47,30 +45,16 @@ public class PunchDAO {
                     while (rs.next()) {
                         
                         //Create badge variable. Use BadgeDAO to find it.
-                        
                         BadgeDAO badgeDAO = new BadgeDAO(daoFactory);
                         String badgeId = rs.getString("badgeid");
                         Badge badge = badgeDAO.find(badgeId);
                         
                         //Get eventtype. punchtype
-                        
-                        int eventtypeid = rs.getInt("eventtypeid");
-                        EventType punchtype = EventType.values()[eventtypeid];
+                        EventType punchtype = EventType.values()[rs.getInt("eventtypeid")];
                                 
                         int terminalid = rs.getInt("terminalid");
                         
-                        //Get timestamp from database. It must be casted into LocalDateTime. 
-                        
-                        java.sql.Timestamp timestamp = new Timestamp(new java.util.Date().getTime());
-                        timestamp = rs.getTimestamp("timestamp");
-                        if (dst) {
-                            originalTimeStamp = timestamp.toLocalDateTime().minusHours(1);
-                        } else {
-                            originalTimeStamp = timestamp.toLocalDateTime();
-                        }
-
-                        //create punch variable.
-                        
+                        originalTimeStamp = rs.getTimestamp("timestamp").toLocalDateTime();
                         punch = new Punch(id, terminalid, badge, originalTimeStamp, punchtype);
                     }
                 }

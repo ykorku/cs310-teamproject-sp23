@@ -208,7 +208,7 @@ public class Punch {
         String dayOfWeek = originalTimeStamp.getDayOfWeek().toString()
                 .substring(0, 3).toUpperCase();
         
-        StringBuilder s = new StringBuilder();        
+        StringBuilder s = new StringBuilder();
         s.append("#").append(badge.getId()).append(" ");
         s.append(punchtype).append(": ").append(dayOfWeek).append(" ")
                 .append(dateText).append(" ").append(timeText);
@@ -227,7 +227,7 @@ public class Punch {
         String dayOfWeek = originalTimeStamp.getDayOfWeek().toString()
                 .substring(0, 3).toUpperCase();
         
-        StringBuilder s = new StringBuilder();    
+        StringBuilder s = new StringBuilder();
         s.append("#").append(badge.getId()).append(" ")
                 .append(punchtype).append(": ").append(dayOfWeek)
                 .append(" ").append(dateText).append(" ")

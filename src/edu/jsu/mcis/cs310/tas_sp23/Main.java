@@ -17,6 +17,6 @@ public class Main {
 
         System.err.println("Test Badge: " + b.toString());
         
-        
     }
+    
 }

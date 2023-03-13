@@ -14,7 +14,7 @@ public class PunchAdjustTest {
         daoFactory = new DAOFactory("tas.jdbc");
     }
 
-    @Test
+	@Test
     public void testAdjustPunchesShift1Weekday() {
 
         /* Get Shift Ruleset and Punch Data */
@@ -168,4 +168,5 @@ public class PunchAdjustTest {
         assertEquals("#ADD650A8 CLOCK OUT: TUE 09/11/2018 15:37:12", p7.printOriginal());
         assertEquals("#ADD650A8 CLOCK OUT: TUE 09/11/2018 15:30:00 (Shift Stop)", p7.printAdjusted());
     }
+
 }

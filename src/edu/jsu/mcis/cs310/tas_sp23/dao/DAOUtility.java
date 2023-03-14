@@ -20,41 +20,50 @@ import edu.jsu.mcis.cs310.tas_sp23.dao.DAOFactory;
  */
 public final class DAOUtility {
     
+        static final int START_OF_SUBSTRING = 20;
+        static final int END_OF_SUBSTRING = 44;
+    
     public static String getPunchListAsJSON(ArrayList<Punch> dailyPunchList) {
         
         JsonArray jsonData = new JsonArray();
+        
         int dailyPunchList_size = dailyPunchList.size();
-        int counter = 0;
-        int number = 20;
-        int number1 = 43;
+
         for(int i = 0; i < dailyPunchList_size; i++) {
             
             Punch punch = dailyPunchList.get(i);
+            
             JsonObject data = new JsonObject();
-            //DAOFactory daoFactory = new DAOFactory("tas.jdbc");
-
+            
+            /* Load punch variables into Json Object */
+            
             data.put("terminalid", String.valueOf(punch.getTerminalid()));
+            
             data.put("id", String.valueOf(punch.getId()));
+            
             Badge b = punch.getBadge();
             data.put("badgeid", String.valueOf(b.getId()));
-            //data.put("terminalid", String.valueOf(punch.getTerminalid()));
+
             EventType et = punch.getPunchtype();
             data.put("punchtype", String.valueOf(et.toString()));
+            
             PunchAdjustmentType pat = punch.getAdjustmentType();
             data.put("adjustmenttype", pat.toString());
-            //LocalDateTime time = punch.getOriginaltimestamp();
+
             String original = punch.printOriginal();
-            String time = original.substring(20);
-            time = time.trim();
+            String time = original.substring(START_OF_SUBSTRING);  //Substring needed for formatting.
+            time = time.trim();  //Trims space before and after string.
             data.put("originaltimestamp", time);
             
             String adjustedOriginal = punch.printAdjusted();
-            String adjustedTime = adjustedOriginal.substring(20, 44);
+            String adjustedTime = adjustedOriginal.substring(START_OF_SUBSTRING, END_OF_SUBSTRING);
             adjustedTime = adjustedTime.trim();
             data.put("adjustedtimestamp", adjustedTime);
 
+            /* Add Json Object to Json Array. Ensures order of punches is the same. */
+            
             jsonData.add(data);
-            counter++;
+
         }
         
         String json = Jsoner.serialize(jsonData);

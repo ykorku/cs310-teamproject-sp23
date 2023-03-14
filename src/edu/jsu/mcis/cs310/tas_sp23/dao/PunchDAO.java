@@ -212,7 +212,7 @@ public class PunchDAO {
                     while (bufferDate.isBefore(end)){
                         
                         punchArray.addAll(list(badge, bufferDate));
-                        bufferDate.plusDays(1);
+                        bufferDate = bufferDate.plusDays(1);
                         
                     }
                     

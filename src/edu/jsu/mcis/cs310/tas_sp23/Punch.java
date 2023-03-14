@@ -244,5 +244,9 @@ public class Punch {
         return s.toString();
     }
 
+    public PunchAdjustmentType getAdjustmentType() {
+        return adjustmentType;
+    }
+
     
 }

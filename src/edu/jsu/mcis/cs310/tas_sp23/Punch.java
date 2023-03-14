@@ -54,6 +54,10 @@ public class Punch {
     public LocalDateTime getOriginaltimestamp() {
         return originalTimeStamp;
     }
+    
+    public PunchAdjustmentType getAdjustmentType() {
+        return adjustmentType;
+    }
 
     private long adjust_helper(LocalTime start, LocalTime time, int round) {
         //adjustmentType = adjustmentType.INTERVAL_ROUND;

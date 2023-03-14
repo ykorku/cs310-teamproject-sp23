@@ -62,14 +62,29 @@ public final class DAOUtility {
                         in = null;
                         out = null;
                     }
-                } 
+                }
                 
-                if (out != null && in != null){
+                if(adjtype==null){
+                    if (punchtype == EventType.CLOCK_IN) {
+                        in=punch.getAdjustedtimestamp();
+                    }
+                    if (punchtype == EventType.CLOCK_OUT) {
+                        out=punch.getAdjustedtimestamp();
+                    }
+                    if (punchtype == EventType.TIME_OUT) {
+                        Punch prevpunch = dailypunchlist.get(i-1);
+                        EventType prevpunchtype = prevpunch.getPunchtype();
+                        if(punchtype == EventType.CLOCK_IN && prevpunchtype == EventType.TIME_OUT){
+                            in = null;
+                            out = null;
+                        }
+                    }
+                }
+                
                     if(adjtype==LUNCH_START || adjtype==LUNCH_STOP){
                         lunchused=true;
                     }
-                }
-                 System.out.println(lunchused);
+                
                 
 
                 if (out != null && in != null) {
@@ -83,15 +98,14 @@ public final class DAOUtility {
                     
                 } 
                 
-                //
-                if(((lunchused==true) && totalMinutes == shift.getLunchthreshold() || totalMinutes>shift.getLunchthreshold()) ){
+                
+                if((!lunchused) && (totalMinutes>shift.getLunchthreshold()) ){
                         
                     totalMinutes = totalMinutes - 30;
-                    lunchused=false;
+                    
                         
                 }
-               
-                   System.out.println(totalMinutes);
+
                   
             }
             

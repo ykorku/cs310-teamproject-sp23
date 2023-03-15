@@ -188,6 +188,67 @@ public class PunchDAO {
         
     }
     
+    public ArrayList list (Badge badge, LocalDate begin, LocalDate end){
+
+        ArrayList<Punch> punchArray = new ArrayList<>();
+        ArrayList<Punch> singleDay = new ArrayList<>();
+        
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+
+            Connection conn = daoFactory.getConnection();    
+
+            if (conn.isValid(0)){                
+                
+                if (begin.isBefore(end)){
+                    
+                    singleDay = list(badge, begin);
+                    punchArray.addAll(singleDay);
+                    
+                    LocalDate bufferDate = begin.plusDays(1);        
+                            
+                    while (bufferDate.isBefore(end)){
+                        
+                        punchArray.addAll(list(badge, bufferDate));
+                        bufferDate = bufferDate.plusDays(1);
+                        
+                    }
+                    
+                    punchArray.addAll(list(badge, end));
+                    
+                }
+                
+            }
+
+        } catch (SQLException e) {
+
+            throw new DAOException(e.getMessage());
+
+        } finally {
+
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    throw new DAOException(e.getMessage());
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException e) {
+                    throw new DAOException(e.getMessage());
+                }
+            }
+
+        }
+
+        return punchArray;
+        
+    }
+    
     public int create(Punch punch) {
         
         int punchId = 0;

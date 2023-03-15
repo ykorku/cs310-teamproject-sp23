@@ -2,15 +2,8 @@ package edu.jsu.mcis.cs310.tas_sp23.dao;
 
 import java.time.*;
 import java.util.*;
-import java.time.temporal.ChronoUnit;
-import java.time.format.DateTimeFormatter;
 import com.github.cliftonlabs.json_simple.*;
 import edu.jsu.mcis.cs310.tas_sp23.Badge;
-import edu.jsu.mcis.cs310.tas_sp23.EventType;
-import edu.jsu.mcis.cs310.tas_sp23.Punch;
-import edu.jsu.mcis.cs310.tas_sp23.PunchAdjustmentType;
-import edu.jsu.mcis.cs310.tas_sp23.dao.BadgeDAO;
-import edu.jsu.mcis.cs310.tas_sp23.dao.DAOFactory;
 import edu.jsu.mcis.cs310.tas_sp23.EventType;
 import edu.jsu.mcis.cs310.tas_sp23.Punch;
 import edu.jsu.mcis.cs310.tas_sp23.PunchAdjustmentType;
@@ -95,60 +88,60 @@ public final class DAOUtility {
             PunchAdjustmentType adjtype = punch.getAdjustmentType();
 
             if (punchtype == EventType.CLOCK_IN) {
-                
+
                 in = punch.getAdjustedtimestamp();
 
                 if(i>0){
-                    
+
                     Punch prevpunch = dailypunchlist.get(i - 1);
                     EventType prevpunchtype = prevpunch.getPunchtype();
                     if((punchtype == EventType.CLOCK_IN) && (prevpunchtype == EventType.CLOCK_IN)){
                         in = prevpunch.getAdjustedtimestamp();
 
                     }
-                    
+
                 }
-                
+
             } 
             else if (punchtype == EventType.CLOCK_OUT ) {
                 out = punch.getAdjustedtimestamp();
             } 
             else if (punchtype == EventType.TIME_OUT) {
-                
+
                 Punch prevpunch = dailypunchlist.get(i - 1);
                 EventType prevpunchtype = prevpunch.getPunchtype();
-                
+
                 if((punchtype == EventType.CLOCK_IN) && (prevpunchtype == EventType.TIME_OUT)){
-                    
+
                     in = null;
                     out = null;
-                    
+
                 }
-                
+
             }
-            
+
             if(adjtype == null){
-                
+
                 if (punchtype == EventType.CLOCK_IN) {
                     in = punch.getAdjustedtimestamp();
                 }
-                
+
                 if (punchtype == EventType.CLOCK_OUT) {
                     out = punch.getAdjustedtimestamp();
                 }
-                
+
                 if (punchtype == EventType.TIME_OUT) {
-                    
+
                     Punch prevpunch = dailypunchlist.get(i-1);
                     EventType prevpunchtype = prevpunch.getPunchtype();
-                    
+
                     if((punchtype == EventType.CLOCK_IN) && (prevpunchtype == EventType.TIME_OUT)){
                         in = null;
                         out = null;
                     }
-                    
+
                 }
-                
+
             }
 
                 if((adjtype==LUNCH_START) || (adjtype==LUNCH_STOP)){
@@ -156,7 +149,7 @@ public final class DAOUtility {
                 }
 
             if ((out != null) && (in != null)) {
-                
+
                 Duration duration = Duration.between(in, out);
                 long minutesBetween = duration.toMinutes();
 
@@ -174,7 +167,7 @@ public final class DAOUtility {
         }
 
         return totalMinutes;
-        
+
     }
 
 }

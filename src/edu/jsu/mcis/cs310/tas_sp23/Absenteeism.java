@@ -25,7 +25,7 @@ public class Absenteeism {
     public BigDecimal getBigDec() {
         return bigDec;
     }
-    
+
     @Override
     public String toString() {
         StringBuilder s = new StringBuilder();

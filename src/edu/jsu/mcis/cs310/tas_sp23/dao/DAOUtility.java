@@ -10,12 +10,12 @@ import edu.jsu.mcis.cs310.tas_sp23.PunchAdjustmentType;
 import static edu.jsu.mcis.cs310.tas_sp23.PunchAdjustmentType.LUNCH_START;
 import static edu.jsu.mcis.cs310.tas_sp23.PunchAdjustmentType.LUNCH_STOP;
 import edu.jsu.mcis.cs310.tas_sp23.Shift;
+import java.math.BigDecimal;
 
 /**
  * Utility class for DAOs.  This is a final, non-constructable class containing
  * common DAO logic and other repeated and/or standardized code, refactored into
  * individual static methods.
- * 
  */
 public final class DAOUtility {
     
@@ -170,4 +170,22 @@ public final class DAOUtility {
 
     }
 
+    public static BigDecimal calculateAbsenteeism(ArrayList<Punch> punchList, Shift shift) {
+        
+        BigDecimal totalMins = new BigDecimal(calculateTotalMinutes(punchList, shift));
+        Duration schedule;
+        
+        
+        if (shift.getShiftstart().isBefore(shift.getShiftstop())) {
+            schedule = Duration.between(shift.getShiftstart(), 
+                    shift.getShiftstop());
+        } else {
+            schedule = Duration.ofHours(24).minus(Duration
+                    .between(shift.getShiftstart(),
+                            shift.getShiftstop()));
+        }
+        
+        return totalMins.divide(new BigDecimal(schedule.toMinutes()));
+    }
+    
 }

@@ -169,5 +169,10 @@ public final class DAOUtility {
         return totalMinutes;
 
     }
+    
+    public static String getPunchListPlusTotalsAsJSON(ArrayList<Punch> punchlist, Shift shift){
+        
+        return null;
+    }
 
 }

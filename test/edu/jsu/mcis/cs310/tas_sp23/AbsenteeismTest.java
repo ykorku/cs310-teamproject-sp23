@@ -43,7 +43,6 @@ public class AbsenteeismTest {
         }
         
         /* Compute Pay Period Total Absenteeism */
-        // Not Sure why these methods throw non-static reference errors
         BigDecimal percentage = DAOUtility.calculateAbsenteeism(punchlist, s);
 
         /* Insert Absenteeism Into Database */

@@ -170,7 +170,7 @@ public final class DAOUtility {
 
     }
 
-    public BigDecimal calculateAbsenteeism(ArrayList<Punch> punchList, Shift shift) {
+    public static BigDecimal calculateAbsenteeism(ArrayList<Punch> punchList, Shift shift) {
         
         BigDecimal totalMins = new BigDecimal(calculateTotalMinutes(punchList, shift));
         Duration schedule;

@@ -172,7 +172,15 @@ public final class DAOUtility {
     
     public static String getPunchListPlusTotalsAsJSON(ArrayList<Punch> punchlist, Shift shift){
         
-        return null;
+        JsonArray jsonData = new JsonArray();
+        
+        //assemble the array here///
+        
+        
+        
+        String json = Jsoner.serialize(jsonData);
+
+        return json;
     }
 
 }

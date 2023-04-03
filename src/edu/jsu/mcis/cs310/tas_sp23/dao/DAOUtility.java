@@ -11,6 +11,7 @@ import static edu.jsu.mcis.cs310.tas_sp23.PunchAdjustmentType.LUNCH_START;
 import static edu.jsu.mcis.cs310.tas_sp23.PunchAdjustmentType.LUNCH_STOP;
 import edu.jsu.mcis.cs310.tas_sp23.Shift;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 /**
  * Utility class for DAOs.  This is a final, non-constructable class containing
@@ -18,26 +19,19 @@ import java.math.BigDecimal;
  * individual static methods.
  */
 public final class DAOUtility {
-    
         static final int START_OF_SUBSTRING = 20;
         static final int END_OF_SUBSTRING = 44;
     
     public static String getPunchListAsJSON(ArrayList<Punch> dailyPunchList) {
-        
         JsonArray jsonData = new JsonArray();
-        
         int dailyPunchList_size = dailyPunchList.size();
 
         for(int i = 0; i < dailyPunchList_size; i++) {
-            
             Punch punch = dailyPunchList.get(i);
-            
             JsonObject data = new JsonObject();
             
             /* Load punch variables into Json Object */
-            
             data.put("terminalid", String.valueOf(punch.getTerminalid()));
-            
             data.put("id", String.valueOf(punch.getId()));
             
             Badge b = punch.getBadge();
@@ -60,48 +54,37 @@ public final class DAOUtility {
             data.put("adjustedtimestamp", adjustedTime);
 
             /* Add Json Object to Json Array. Ensures order of punches is the same. */
-            
             jsonData.add(data);
-
         }
-        
         String json = Jsoner.serialize(jsonData);
-
         return json;
-        
     }
     
     public static int calculateTotalMinutes(ArrayList<Punch> dailypunchlist, Shift shift) {
-
-        //localdatetime use, 2 clock in second ignored, use threshold value, padjtype check value lunch
-
-        int totalMinutes = 0;
+        int totalMins = 0;
         LocalDateTime in = null ;
         LocalDateTime out = null ;
 
-        boolean lunchused=false;
+        boolean lunchUsed = false;
+        long minsBetween;
 
         for (int i = 0; i < dailypunchlist.size(); i++) {
-
+            minsBetween = 0;
             Punch punch = dailypunchlist.get(i);
             EventType punchtype = punch.getPunchtype();
             PunchAdjustmentType adjtype = punch.getAdjustmentType();
 
             if (punchtype == EventType.CLOCK_IN) {
-
                 in = punch.getAdjustedtimestamp();
 
                 if(i>0){
-
                     Punch prevpunch = dailypunchlist.get(i - 1);
                     EventType prevpunchtype = prevpunch.getPunchtype();
+                    
                     if((punchtype == EventType.CLOCK_IN) && (prevpunchtype == EventType.CLOCK_IN)){
                         in = prevpunch.getAdjustedtimestamp();
-
                     }
-
                 }
-
             } 
             else if (punchtype == EventType.CLOCK_OUT ) {
                 out = punch.getAdjustedtimestamp();
@@ -112,12 +95,9 @@ public final class DAOUtility {
                 EventType prevpunchtype = prevpunch.getPunchtype();
 
                 if((punchtype == EventType.CLOCK_IN) && (prevpunchtype == EventType.TIME_OUT)){
-
                     in = null;
                     out = null;
-
                 }
-
             }
 
             if(adjtype == null){
@@ -139,53 +119,56 @@ public final class DAOUtility {
                         in = null;
                         out = null;
                     }
-
                 }
-
             }
 
                 if((adjtype==LUNCH_START) || (adjtype==LUNCH_STOP)){
-                    lunchused = true;
+                    lunchUsed = true;
                 }
 
             if ((out != null) && (in != null)) {
+                minsBetween = Duration.between(in, out).toMinutes();
+                System.out.println("In: " + in + ", Out: " + out);
+                System.out.println(minsBetween);
 
-                Duration duration = Duration.between(in, out);
-                long minutesBetween = duration.toMinutes();
-
-                totalMinutes += minutesBetween;
+                //totalMins += minsBetween;
 
                 in = null;
                 out = null;
-
-            } 
-
-            if((!lunchused) && (totalMinutes>shift.getLunchthreshold()) ){
-                totalMinutes = totalMinutes - 30;
             }
 
+            if((!lunchUsed) && (minsBetween > shift.getLunchthreshold()) ) {
+                totalMins = totalMins + (int)(minsBetween - 30);
+            } else {
+                totalMins = totalMins + (int)(minsBetween);
+            }
         }
-
-        return totalMinutes;
-
+        System.out.println(totalMins);
+        return totalMins;
     }
 
+
     public static BigDecimal calculateAbsenteeism(ArrayList<Punch> punchList, Shift shift) {
-        
-        BigDecimal totalMins = new BigDecimal(calculateTotalMinutes(punchList, shift));
-        Duration schedule;
-        
+        BigDecimal minsWorked = new BigDecimal(calculateTotalMinutes(punchList, shift));
+        Duration tempMins;
+        int lunch_durations = 30;
         
         if (shift.getShiftstart().isBefore(shift.getShiftstop())) {
-            schedule = Duration.between(shift.getShiftstart(), 
+            tempMins = Duration.between(shift.getShiftstart(), 
                     shift.getShiftstop());
         } else {
-            schedule = Duration.ofHours(24).minus(Duration
+            tempMins = Duration.ofHours(24).minus(Duration
                     .between(shift.getShiftstart(),
                             shift.getShiftstop()));
         }
         
-        return totalMins.divide(new BigDecimal(schedule.toMinutes()));
+        BigDecimal scheduledMins = new BigDecimal((tempMins.toMinutes() - lunch_durations)*5);
+        BigDecimal percentage = minsWorked.divide(scheduledMins, 4, RoundingMode.HALF_UP)
+                .subtract(new BigDecimal(1)).multiply(new BigDecimal(-100));
+        
+        //System.out.println(scheduledMins);
+        //System.out.println(minsWorked);
+        
+        return percentage;
     }
-    
 }

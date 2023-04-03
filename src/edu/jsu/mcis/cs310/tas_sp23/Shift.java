@@ -99,7 +99,6 @@ public class Shift {
         s.append("Lunch: ").append(lunchstart).append(" - ")
                 .append(lunchstop).append(" ").append("(")
                 .append(lduration).append(" minutes").append(")");
-        System.out.println(s.toString());
         return s.toString();
     }
 }

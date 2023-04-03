@@ -177,4 +177,56 @@ public class JSONTest2 {
         
     }
     
+    @Test
+    public void testJSONShift3Weekday() {
+        
+        try {
+        
+            EmployeeDAO employeeDAO = daoFactory.getEmployeeDAO();
+            PunchDAO punchDAO = daoFactory.getPunchDAO();
+
+            /* Expected JSON Data */
+
+            String expectedJSON = "{\"absenteeism\":\"-27.50%\",\"totalminutes\":3060,\"punchlist\":[{\"originaltimestamp\":\"MON 09/17/2018 11:30:37\",\"badgeid\":\"08D01475\",\"adjustedtimestamp\":\"MON 09/17/2018 11:30:00\",\"adjustmenttype\":\"None\",\"terminalid\":\"104\",\"id\":\"4809\",\"punchtype\":\"CLOCK IN\"},{\"originaltimestamp\":\"MON 09/17/2018 20:32:06\",\"badgeid\":\"08D01475\",\"adjustedtimestamp\":\"MON 09/17/2018 20:30:00\",\"adjustmenttype\":\"Shift Stop\",\"terminalid\":\"104\",\"id\":\"4880\",\"punchtype\":\"CLOCK OUT\"},{\"originaltimestamp\":\"TUE 09/18/2018 11:59:33\",\"badgeid\":\"08D01475\",\"adjustedtimestamp\":\"TUE 09/18/2018 12:00:00\",\"adjustmenttype\":\"Shift Start\",\"terminalid\":\"104\",\"id\":\"4943\",\"punchtype\":\"CLOCK IN\"},{\"originaltimestamp\":\"TUE 09/18/2018 21:30:27\",\"badgeid\":\"08D01475\",\"adjustedtimestamp\":\"TUE 09/18/2018 21:30:00\",\"adjustmenttype\":\"None\",\"terminalid\":\"104\",\"id\":\"5004\",\"punchtype\":\"CLOCK OUT\"},{\"originaltimestamp\":\"WED 09/19/2018 12:07:51\",\"badgeid\":\"08D01475\",\"adjustedtimestamp\":\"WED 09/19/2018 12:15:00\",\"adjustmenttype\":\"Shift Dock\",\"terminalid\":\"104\",\"id\":\"5091\",\"punchtype\":\"CLOCK IN\"},{\"originaltimestamp\":\"WED 09/19/2018 22:31:05\",\"badgeid\":\"08D01475\",\"adjustedtimestamp\":\"WED 09/19/2018 22:30:00\",\"adjustmenttype\":\"Interval Round\",\"terminalid\":\"104\",\"id\":\"5162\",\"punchtype\":\"CLOCK OUT\"},{\"originaltimestamp\":\"THU 09/20/2018 11:57:30\",\"badgeid\":\"08D01475\",\"adjustedtimestamp\":\"THU 09/20/2018 12:00:00\",\"adjustmenttype\":\"Shift Start\",\"terminalid\":\"104\",\"id\":\"5228\",\"punchtype\":\"CLOCK IN\"},{\"originaltimestamp\":\"THU 09/20/2018 22:30:31\",\"badgeid\":\"08D01475\",\"adjustedtimestamp\":\"THU 09/20/2018 22:30:00\",\"adjustmenttype\":\"None\",\"terminalid\":\"104\",\"id\":\"5307\",\"punchtype\":\"CLOCK OUT\"},{\"originaltimestamp\":\"FRI 09/21/2018 11:52:08\",\"badgeid\":\"08D01475\",\"adjustedtimestamp\":\"FRI 09/21/2018 12:00:00\",\"adjustmenttype\":\"Shift Start\",\"terminalid\":\"104\",\"id\":\"5383\",\"punchtype\":\"CLOCK IN\"},{\"originaltimestamp\":\"FRI 09/21/2018 20:30:51\",\"badgeid\":\"08D01475\",\"adjustedtimestamp\":\"FRI 09/21/2018 20:30:00\",\"adjustmenttype\":\"Shift Stop\",\"terminalid\":\"104\",\"id\":\"5455\",\"punchtype\":\"CLOCK OUT\"},{\"originaltimestamp\":\"SAT 09/22/2018 05:49:00\",\"badgeid\":\"08D01475\",\"adjustedtimestamp\":\"SAT 09/22/2018 05:45:00\",\"adjustmenttype\":\"Interval Round\",\"terminalid\":\"104\",\"id\":\"5463\",\"punchtype\":\"CLOCK IN\"},{\"originaltimestamp\":\"SAT 09/22/2018 12:04:15\",\"badgeid\":\"08D01475\",\"adjustedtimestamp\":\"SAT 09/22/2018 12:00:00\",\"adjustmenttype\":\"Interval Round\",\"terminalid\":\"104\",\"id\":\"5541\",\"punchtype\":\"CLOCK OUT\"}]}";
+
+            JsonObject expected = (JsonObject)(Jsoner.deserialize(expectedJSON));
+
+            /* Get Punch */
+
+            Punch p = punchDAO.find(4716);
+            Employee e = employeeDAO.find(p.getBadge());
+            Shift s = e.getShift();
+            Badge b = e.getBadge();
+
+            /* Get Pay Period Punch List */
+
+            LocalDate ts = p.getOriginaltimestamp().toLocalDate();
+            LocalDate begin = ts.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY));
+            LocalDate end = begin.with(TemporalAdjusters.next(DayOfWeek.SATURDAY));
+
+            ArrayList<Punch> punchlist = punchDAO.list(b, begin, end);
+
+            /* Adjust Punch List */
+
+            for (Punch punch : punchlist) {
+                punch.adjust(s);
+            }
+
+            /* JSON Conversion */
+
+            String actualJSON = DAOUtility.getPunchListPlusTotalsAsJSON(punchlist, s);
+
+            JsonObject actual = (JsonObject)Jsoner.deserialize(actualJSON);
+
+            /* Compare to Expected JSON */
+
+            assertEquals(expected, actual);
+
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+    }
+    
 }

@@ -1,7 +1,10 @@
 package edu.jsu.mcis.cs310.tas_sp23;
 
 import java.math.BigDecimal;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAdjusters;
 
 public class Absenteeism {
     private final Employee employee;        // Employee object
@@ -29,8 +32,15 @@ public class Absenteeism {
     @Override
     public String toString() {
         StringBuilder s = new StringBuilder();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
+        String dateText = payPeriodStart
+                .with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY))
+                .format(formatter);
+        String percent = String.format("%.2f", bigDec.floatValue());
         
-        
+        s.append('#').append(employee.getBadge().getId()).append(' ');
+        s.append("(Pay Period Starting ").append(dateText).append("): ");
+        s.append(percent).append("%");
         
         return s.toString();
     }

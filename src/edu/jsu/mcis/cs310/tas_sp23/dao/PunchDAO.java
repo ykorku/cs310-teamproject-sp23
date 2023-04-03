@@ -57,8 +57,6 @@ public class PunchDAO {
                                 
                         int terminalid = rs.getInt("terminalid");
                         
-                        System.out.println(ZoneId.systemDefault());
-                        System.out.println(TimeZone.getDefault());
                         originalTimeStamp = rs.getTimestamp("timestamp").toLocalDateTime();
                         punch = new Punch(id, terminalid, badge, originalTimeStamp, punchtype);
                     }

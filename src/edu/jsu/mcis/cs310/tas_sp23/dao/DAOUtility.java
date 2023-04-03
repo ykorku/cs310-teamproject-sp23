@@ -147,6 +147,7 @@ public final class DAOUtility {
     public static String getPunchListPlusTotalsAsJSON(ArrayList<Punch> punchlist, Shift shift){
         
         JsonArray jsonData = new JsonArray();
+        JsonObject jsonData2 = new JsonObject();
         int punchList_size = punchlist.size();
 
         for(int i = 0; i < punchList_size; i++) {
@@ -155,15 +156,6 @@ public final class DAOUtility {
             JsonObject data = new JsonObject();
             
             /* Get absenteeism and total minutes */
-            
-            BigDecimal percentAbsent = DAOUtility.calculateAbsenteeism(punchlist, shift);
-            int totalMin = DAOUtility.calculateTotalMinutes(punchlist, shift);
-            
-            /* Load variables into Json Object */
-            
-            data.put("absenteeism", String.valueOf(percentAbsent));
-            
-            data.put("totalminutes", String.valueOf(totalMin));
             
             data.put("terminalid", String.valueOf(punch.getTerminalid()));
             data.put("id", String.valueOf(punch.getId()));
@@ -193,7 +185,19 @@ public final class DAOUtility {
             
         }
         
-        String json = Jsoner.serialize(jsonData);
+        BigDecimal percentAbsent = DAOUtility.calculateAbsenteeism(punchlist, shift);
+        int totalMin = DAOUtility.calculateTotalMinutes(punchlist, shift);
+
+        /* Load variables into Json Object */
+        StringBuilder s = new StringBuilder();
+        String percent = String.format("%.2f", percentAbsent.floatValue());
+        s.append(percent).append("%");
+        jsonData2.put("absenteeism", s);
+
+        jsonData2.put("totalminutes", String.valueOf(totalMin));
+        jsonData2.put("punchlist", jsonData);
+        
+        String json = Jsoner.serialize(jsonData2);
         
         return json;
         

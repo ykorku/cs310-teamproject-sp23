@@ -50,9 +50,7 @@ public class EmployeeDAO {
                         String lastname = rs.getString("lastname");
                         
                         //Get timestamp from database. It must be casted into LocalDateTime.
-                        java.sql.Timestamp timestamp = new Timestamp(new java.util.Date().getTime());
-                        timestamp = rs.getTimestamp("active");
-                        LocalDateTime active = timestamp.toLocalDateTime();
+                        LocalDateTime active = rs.getTimestamp("active").toLocalDateTime();
                         
                         //Get Badge object.
                         BadgeDAO badgeDAO = new BadgeDAO(daoFactory);

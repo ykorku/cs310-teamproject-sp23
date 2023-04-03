@@ -34,8 +34,6 @@ public class AbsenteeismTest {
         LocalDate ts = p.getOriginaltimestamp().toLocalDate();
         LocalDate begin = ts.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY));
         LocalDate end = begin.with(TemporalAdjusters.next(DayOfWeek.SATURDAY));
-        System.out.println(begin);
-        System.out.println(end);
         
         ArrayList<Punch> punchlist = punchDAO.list(b, begin, end);
 
@@ -59,7 +57,6 @@ public class AbsenteeismTest {
 
     @Test
     public void testAbsenteeismShift1Weekend() {
-        System.out.println("Test 2");
         AbsenteeismDAO absenteeismDAO = daoFactory.getAbsenteeismDAO();
         EmployeeDAO employeeDAO = daoFactory.getEmployeeDAO();
         PunchDAO punchDAO = daoFactory.getPunchDAO();
@@ -80,13 +77,10 @@ public class AbsenteeismTest {
         /* Adjust Punch List */
         for (Punch punch : punchlist) {
             punch.adjust(s);
-            //System.out.println(punch.getOriginaltimestamp());
-            //System.out.println(punch.getAdjustedtimestamp());
         }
 
         /* Compute Pay Period Total Absenteeism */
         BigDecimal percentage = DAOUtility.calculateAbsenteeism(punchlist, s);
-        System.out.println(percentage);
 
         /* Insert Absenteeism Into Database */
         Absenteeism a1 = new Absenteeism(e, ts, percentage);
@@ -94,8 +88,6 @@ public class AbsenteeismTest {
 
         /* Retrieve Absenteeism From Database */
         Absenteeism a2 = absenteeismDAO.find(e, ts);
-        System.out.println(begin);
-        System.out.println(end+"\n");
 
         /* Compare to Expected Value */
         assertEquals("#F1EE0555 (Pay Period Starting 08-05-2018): -20.00%", a2.toString());

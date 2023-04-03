@@ -128,8 +128,6 @@ public final class DAOUtility {
 
             if ((out != null) && (in != null)) {
                 minsBetween = Duration.between(in, out).toMinutes();
-                System.out.println("In: " + in + ", Out: " + out);
-                System.out.println(minsBetween);
 
                 //totalMins += minsBetween;
 
@@ -143,7 +141,6 @@ public final class DAOUtility {
                 totalMins = totalMins + (int)(minsBetween);
             }
         }
-        System.out.println(totalMins);
         return totalMins;
     }
 
@@ -165,9 +162,6 @@ public final class DAOUtility {
         BigDecimal scheduledMins = new BigDecimal((tempMins.toMinutes() - lunch_durations)*5);
         BigDecimal percentage = minsWorked.divide(scheduledMins, 4, RoundingMode.HALF_UP)
                 .subtract(new BigDecimal(1)).multiply(new BigDecimal(-100));
-        
-        //System.out.println(scheduledMins);
-        //System.out.println(minsWorked);
         
         return percentage;
     }

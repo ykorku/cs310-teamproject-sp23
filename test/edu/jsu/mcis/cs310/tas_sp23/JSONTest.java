@@ -31,7 +31,7 @@ public class JSONTest {
             ArrayList<HashMap<String, String>> expected = (ArrayList) Jsoner.deserialize(expectedJSON);
 
             /* Get Punch/Badge/Shift Objects */
-            Punch p = punchDAO.find(3634);
+            Punch p = punchDAO.find(3634); 
             Badge b = badgeDAO.find(p.getBadge().getId());
             Shift s = shiftDAO.find(b);
 

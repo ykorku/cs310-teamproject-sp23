@@ -192,13 +192,13 @@ public final class DAOUtility {
         StringBuilder s = new StringBuilder();
         String percent = String.format("%.2f", percentAbsent.floatValue());
         s.append(percent).append("%");
-        jsonData2.put("absenteeism", s);
+        jsonData2.put("absenteeism", s.toString());
 
-        jsonData2.put("totalminutes", String.valueOf(totalMin));
+        jsonData2.put("totalminutes",totalMin);
         jsonData2.put("punchlist", jsonData);
         
         String json = Jsoner.serialize(jsonData2);
-        
+
         return json;
         
     }

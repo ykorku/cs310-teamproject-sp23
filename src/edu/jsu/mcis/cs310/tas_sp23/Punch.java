@@ -76,15 +76,18 @@ public class Punch {
         int after = (int)((Math.ceil(mins/rnd)) * rnd);
         LocalTime time = original;
         
-        if (Math.abs(before - mins) == Math.abs(after - mins)) {
+        if ((Math.abs(before - mins)) == (Math.abs(after - mins))) {
             time = LocalTime.of(((int)(mins/60)), ((int)(mins%60)));
             adjustmentType = adjustmentType.NONE;
-        } else if (Math.abs(before - mins) > Math.abs(after - mins)) {
+        } else if ((Math.abs(before - mins)) > (Math.abs(after - mins))) {
             time = LocalTime.of((after/60),(after%60));
             adjustmentType = adjustmentType.INTERVAL_ROUND;
-        } else if (Math.abs(before - mins) < Math.abs(after - mins)) {
+            System.err.println("1a" + adjustmentType);
+        } else if ((Math.abs(before - mins)) < (Math.abs(after - mins))) {
             time = LocalTime.of((before/60),(before%60));
+            System.err.println(adjustmentType);
             adjustmentType = adjustmentType.INTERVAL_ROUND;
+            System.err.println("2b" + adjustmentType);
         }
 
         return time;
@@ -130,7 +133,7 @@ public class Punch {
         // Start and stop times for lunch
         LocalTime lunchStart = s.getLunchstart();
         LocalTime lunchStop = s.getLunchstop();
-
+        System.err.println("first: " + adjustmentType);
         // Weekday time adjustment
         if (!(day.equals("saturday") || day.equals("sunday"))) {
             switch(punch_type) {
@@ -150,6 +153,7 @@ public class Punch {
                         adjustedTimeStamp = LocalDateTime.of(original_date,
                                 over_schedule(original_time,
                                         s.getRoundinterval()));
+                        System.err.println("1" + adjustmentType);
                     } else if (original_time.isAfter(startGrace) || original_time.equals(startDock)) {
                         adjustedTimeStamp = LocalDateTime.of(original_date, startDock);
                         adjustmentType = adjustmentType.SHIFT_DOCK;
@@ -170,10 +174,12 @@ public class Punch {
                         adjustedTimeStamp = LocalDateTime.of(original_date,
                                 over_schedule(original_time,
                                         s.getRoundinterval()));
+                        System.err.println("2" + adjustmentType);
                     } else if (original_time.isBefore(stopGrace)) {
                         adjustedTimeStamp = LocalDateTime.of(original_date, stopDock);
                         if (adjustedTimeStamp.isAfter(rndDateTime)) {
                             adjustmentType = adjustmentType.INTERVAL_ROUND;
+                            System.err.println("3" + adjustmentType);
                         } else if (adjustedTimeStamp.equals(rndDateTime) || adjustedTimeStamp.isBefore(rndDateTime)) {
                             adjustmentType = adjustmentType.SHIFT_DOCK;
                         }

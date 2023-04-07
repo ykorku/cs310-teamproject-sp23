@@ -189,6 +189,7 @@ public final class DAOUtility {
         int totalMin = DAOUtility.calculateTotalMinutes(punchlist, shift);
 
         /* Load variables into Json Object */
+        
         StringBuilder s = new StringBuilder();
         String percent = String.format("%.2f", percentAbsent.floatValue());
         s.append(percent).append("%");

@@ -1,8 +1,20 @@
 package edu.jsu.mcis.cs310.tas_sp23;
 
+import java.util.zip.CRC32;
+
 public class Badge {
 
     private final String id, description;
+
+    public Badge(String description) {
+        this.description = description;
+
+        CRC32 crc = new CRC32();
+        crc.update(description.getBytes());
+        long idLong = crc.getValue();
+        String idString = String.format("%08X", idLong);
+        this.id = idString;
+    }
 
     public Badge(String id, String description) {
         this.id = id;

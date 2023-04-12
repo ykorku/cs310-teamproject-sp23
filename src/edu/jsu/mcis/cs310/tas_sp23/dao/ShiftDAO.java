@@ -1,11 +1,15 @@
 package edu.jsu.mcis.cs310.tas_sp23.dao;
 
 import edu.jsu.mcis.cs310.tas_sp23.Badge;
+import edu.jsu.mcis.cs310.tas_sp23.DailySchedule;
 import edu.jsu.mcis.cs310.tas_sp23.Shift;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.HashMap;
 
 /**
@@ -13,8 +17,8 @@ import java.util.HashMap;
  * @author yunus
  */
 public class ShiftDAO {
-    
-    private static final String QUERY_FIND_ID = "SELECT * FROM shift WHERE id = ?";
+    //SELECT * FROM dailyschedule JOIN shift ON dailyschedule.id=shift.dailyscheduleid
+    private static final String QUERY_FIND_ID = "SELECT * FROM dailyschedule JOIN shift ON dailyschedule.id=shift.dailyscheduleid WHERE shift.dailyscheduleid = ?";
     
     private static final String QUERY_FIND_BADGE = "SELECT * FROM employee WHERE badgeid = ?";
 
@@ -49,17 +53,22 @@ public class ShiftDAO {
                     while (rs.next()) {
 
                         HashMap<String, String> shiftValues = new HashMap<>();
+                        HashMap<String, String> dsValues = new HashMap<>();
                         
                         shiftValues.put("id",  rs.getString("id"));
                         shiftValues.put("description",  rs.getString("description"));
-                        shiftValues.put("shiftstart",  rs.getString("shiftstart"));
-                        shiftValues.put("shiftstop",  rs.getString("shiftstop"));
-                        shiftValues.put("roundinterval",  rs.getString("roundinterval"));
-                        shiftValues.put("graceperiod",  rs.getString("graceperiod"));
-                        shiftValues.put("dockpenalty",  rs.getString("dockpenalty"));
-                        shiftValues.put("lunchstart",  rs.getString("lunchstart"));
-                        shiftValues.put("lunchstop",  rs.getString("lunchstop"));
-                        shiftValues.put("lunchthreshold",  rs.getString("lunchthreshold"));
+                        
+                        dsValues.put("shiftstart",  rs.getString("shiftstart"));
+                        dsValues.put("shiftstop",  rs.getString("shiftstop"));
+                        dsValues.put("roundinterval",  rs.getString("roundinterval"));
+                        dsValues.put("graceperiod",  rs.getString("graceperiod"));
+                        dsValues.put("dockpenalty",  rs.getString("dockpenalty"));
+                        dsValues.put("lunchstart",  rs.getString("lunchstart"));
+                        dsValues.put("lunchstop",  rs.getString("lunchstop"));
+                        dsValues.put("lunchthreshold",  rs.getString("lunchthreshold"));
+                        DailySchedule defaultschedule=new DailySchedule(dsValues);
+                        
+                        shiftValues.put("defaultschedule", defaultschedule.toString() );
                         
                         shift = new Shift(shiftValues);
                     }
@@ -137,5 +146,85 @@ public class ShiftDAO {
             }
         }
         return shift;
+    }
+    
+    
+    private static final String QUERY_FIND_DATE_BADGE = "SELECT * FROM dailyschedule JOIN shift ON dailyschedule.id=shift.dailyscheduleid ";
+    
+    
+    // not done just a sketch
+    public Shift find(Badge b, LocalDate localdate){
+        Shift shift = null;
+
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+
+            Connection conn = daoFactory.getConnection();
+
+            if (conn.isValid(0)) {
+                
+                ps = conn.prepareStatement(QUERY_FIND_DATE_BADGE);
+                ps.setObject(1, b);
+                
+                Date date = Date.from(localdate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+                ps.setDate(2, (java.sql.Date) date);
+
+                boolean hasresults = ps.execute();
+
+                if (hasresults) {
+
+                    rs = ps.getResultSet();
+                    
+                    while (rs.next()) {
+
+                        HashMap<String, String> shiftValues = new HashMap<>();
+                        HashMap<String, String> dsValues = new HashMap<>();
+                        
+                        shiftValues.put("id",  rs.getString("id"));
+                        shiftValues.put("description",  rs.getString("description"));
+                        
+                        
+                        
+                        dsValues.put("shiftstart",  rs.getString("shiftstart"));
+                        dsValues.put("shiftstop",  rs.getString("shiftstop"));
+                        dsValues.put("roundinterval",  rs.getString("roundinterval"));
+                        dsValues.put("graceperiod",  rs.getString("graceperiod"));
+                        dsValues.put("dockpenalty",  rs.getString("dockpenalty"));
+                        dsValues.put("lunchstart",  rs.getString("lunchstart"));
+                        dsValues.put("lunchstop",  rs.getString("lunchstop"));
+                        dsValues.put("lunchthreshold",  rs.getString("lunchthreshold"));
+                        DailySchedule defaultschedule=new DailySchedule(dsValues);
+                        
+                        shiftValues.put("defaultschedule", defaultschedule.toString() );
+                        
+                        shift = new Shift(shiftValues);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+
+            throw new DAOException(e.getMessage());
+
+        } finally {
+
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    throw new DAOException(e.getMessage());
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException e) {
+                    throw new DAOException(e.getMessage());
+                }
+            }
+        }
+        
+        return shift;
+        
     }
 }

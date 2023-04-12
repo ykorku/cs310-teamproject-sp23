@@ -69,20 +69,21 @@ public class Punch {
                 .toMinutes()), round))+1)*round;
     }
     
-    private LocalTime over_schedule(LocalTime original, int round) {
+    private LocalTime over_schedule(int round) {
+        LocalTime original = originalTimeStamp.toLocalTime();
         double mins = (original.getHour() * 60) + original.getMinute();
         double rnd = round;
         int before = (int)((Math.floor(mins/rnd))*rnd);
         int after = (int)((Math.ceil(mins/rnd)) * rnd);
         LocalTime time = original;
         
-        if (Math.abs(before - mins) == Math.abs(after - mins)) {
+        if ((Math.abs(before - mins)) == (Math.abs(after - mins))) {
             time = LocalTime.of(((int)(mins/60)), ((int)(mins%60)));
             adjustmentType = adjustmentType.NONE;
-        } else if (Math.abs(before - mins) > Math.abs(after - mins)) {
+        } else if ((Math.abs(before - mins)) > (Math.abs(after - mins))) {
             time = LocalTime.of((after/60),(after%60));
             adjustmentType = adjustmentType.INTERVAL_ROUND;
-        } else if (Math.abs(before - mins) < Math.abs(after - mins)) {
+        } else if ((Math.abs(before - mins)) < (Math.abs(after - mins))) {
             time = LocalTime.of((before/60),(before%60));
             adjustmentType = adjustmentType.INTERVAL_ROUND;
         }
@@ -130,7 +131,6 @@ public class Punch {
         // Start and stop times for lunch
         LocalTime lunchStart = s.getLunchstart();
         LocalTime lunchStop = s.getLunchstop();
-
         // Weekday time adjustment
         if (!(day.equals("saturday") || day.equals("sunday"))) {
             switch(punch_type) {
@@ -148,8 +148,8 @@ public class Punch {
                     // Punch more than 15 mins before shift start
                     } else if (original_time.isBefore(startRound)) {
                         adjustedTimeStamp = LocalDateTime.of(original_date,
-                                over_schedule(original_time,
-                                        s.getRoundinterval()));
+                                over_schedule(s.getRoundinterval()));
+
                     } else if (original_time.isAfter(startGrace) || original_time.equals(startDock)) {
                         adjustedTimeStamp = LocalDateTime.of(original_date, startDock);
                         adjustmentType = adjustmentType.SHIFT_DOCK;
@@ -168,8 +168,7 @@ public class Punch {
                     // Punch more than 15 mins after shift end
                     } else if (original_time.isAfter(stopRound)) {
                         adjustedTimeStamp = LocalDateTime.of(original_date,
-                                over_schedule(original_time,
-                                        s.getRoundinterval()));
+                                over_schedule(s.getRoundinterval()));
                     } else if (original_time.isBefore(stopGrace)) {
                         adjustedTimeStamp = LocalDateTime.of(original_date, stopDock);
                         if (adjustedTimeStamp.isAfter(rndDateTime)) {
@@ -191,13 +190,11 @@ public class Punch {
             switch(punch_type) {
                 case "CLOCK IN":
                     adjustedTimeStamp = LocalDateTime.of(original_date,
-                            over_schedule(original_time,
-                                    s.getRoundinterval()));
+                            over_schedule(s.getRoundinterval()));
                     break;
                 case "CLOCK OUT":
                     adjustedTimeStamp = LocalDateTime.of(original_date,
-                            over_schedule(original_time,
-                                        s.getRoundinterval()));
+                            over_schedule(s.getRoundinterval()));
                     break;
                 case "TIME OUT":
                     System.out.println("TIME OUT");

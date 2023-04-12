@@ -3,6 +3,8 @@ package edu.jsu.mcis.cs310.tas_sp23;
 import edu.jsu.mcis.cs310.tas_sp23.dao.BadgeDAO;
 import edu.jsu.mcis.cs310.tas_sp23.dao.DAOFactory;
 
+
+
 public class Main {
     public static void main(String[] args) {
         
@@ -18,5 +20,5 @@ public class Main {
         System.err.println("Test Badge: " + b.toString());
         
     }
-    
+
 }

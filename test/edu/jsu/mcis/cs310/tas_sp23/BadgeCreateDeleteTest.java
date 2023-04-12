@@ -15,12 +15,12 @@ public class BadgeCreateDeleteTest {
 
     @Test
     public void testCreateBadge1() {
+
         /* Create Badges */
         Badge b1 = new Badge("Bies, Bill X");
 
         /* Compare Badge to Expected Value */
         assertEquals("#052B00DC (Bies, Bill X)", b1.toString());
-
     }
     
     @Test
@@ -60,6 +60,5 @@ public class BadgeCreateDeleteTest {
         
         /* Check Deletion Result */
         assertEquals(true, result);
-
     }
 }

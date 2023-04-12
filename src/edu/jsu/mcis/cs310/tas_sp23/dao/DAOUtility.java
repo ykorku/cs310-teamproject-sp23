@@ -143,7 +143,66 @@ public final class DAOUtility {
         }
         return totalMins;
     }
+    
+    public static String getPunchListPlusTotalsAsJSON(ArrayList<Punch> punchlist, Shift shift){
+        
+        JsonArray jsonData = new JsonArray();
+        JsonObject jsonData2 = new JsonObject();
+        int punchList_size = punchlist.size();
 
+        for(int i = 0; i < punchList_size; i++) {
+            
+            Punch punch = punchlist.get(i);
+            JsonObject data = new JsonObject();
+            
+            /* Get absenteeism and total minutes */
+            
+            data.put("terminalid", String.valueOf(punch.getTerminalid()));
+            data.put("id", String.valueOf(punch.getId()));
+            
+            Badge b = punch.getBadge();
+            data.put("badgeid", String.valueOf(b.getId()));
+
+            EventType et = punch.getPunchtype();
+            data.put("punchtype", String.valueOf(et.toString()));
+            
+            PunchAdjustmentType pat = punch.getAdjustmentType();
+            data.put("adjustmenttype", pat.toString());
+
+            String original = punch.printOriginal();
+            String time = original.substring(START_OF_SUBSTRING);  //Substring needed for formatting.
+            time = time.trim();  //Trims space before and after string.
+            data.put("originaltimestamp", time);
+            
+            String adjustedOriginal = punch.printAdjusted();
+            String adjustedTime = adjustedOriginal.substring(START_OF_SUBSTRING, END_OF_SUBSTRING);
+            adjustedTime = adjustedTime.trim();
+            data.put("adjustedtimestamp", adjustedTime);
+
+            /* Add Json Object to Json Array. Ensures order of punches is the same. */
+            
+            jsonData.add(data);
+            
+        }
+        
+        BigDecimal percentAbsent = DAOUtility.calculateAbsenteeism(punchlist, shift);
+        int totalMin = DAOUtility.calculateTotalMinutes(punchlist, shift);
+
+        /* Load variables into Json Object */
+        
+        StringBuilder s = new StringBuilder();
+        String percent = String.format("%.2f", percentAbsent.floatValue());
+        s.append(percent).append("%");
+        jsonData2.put("absenteeism", s.toString());
+
+        jsonData2.put("totalminutes",totalMin);
+        jsonData2.put("punchlist", jsonData);
+        
+        String json = Jsoner.serialize(jsonData2);
+
+        return json;
+        
+    }
 
     public static BigDecimal calculateAbsenteeism(ArrayList<Punch> punchList, Shift shift) {
         BigDecimal minsWorked = new BigDecimal(calculateTotalMinutes(punchList, shift));

@@ -22,7 +22,12 @@ public class Shift {
         this.description = shiftValues.get("description");
         this.defaultschedule = new DailySchedule(shiftValues);
         
-        
+        dailySchedules = new HashMap<>();
+        dailySchedules.put(DayOfWeek.MONDAY, defaultschedule);
+        dailySchedules.put(DayOfWeek.TUESDAY, defaultschedule);
+        dailySchedules.put(DayOfWeek.WEDNESDAY, defaultschedule);
+        dailySchedules.put(DayOfWeek.THURSDAY, defaultschedule);
+        dailySchedules.put(DayOfWeek.FRIDAY, defaultschedule);
         
     }
     
@@ -69,6 +74,17 @@ public class Shift {
     
     public DailySchedule getDefaultschedule(){
         return defaultschedule;
+    }
+    
+    public DailySchedule getDailySchedule(DayOfWeek day) {
+        
+    DailySchedule dailySchedule = dailySchedules.get(day);
+    
+    if (dailySchedule == null) {
+        dailySchedule = defaultschedule;
+    }
+        return dailySchedule;
+        
     }
     
     

@@ -7,7 +7,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.HashMap;
@@ -22,6 +25,9 @@ public class ShiftDAO {
     
     private static final String QUERY_FIND_BADGE = "SELECT * FROM employee WHERE badgeid = ?";
 
+        private static final String QUERY_FIND_BADGE2 = "SELECT * FROM dailyschedule JOIN scheduleoverride ON dailyschedule.id=scheduleoverride.dailyscheduleid";
+
+    
     private final DAOFactory daoFactory;
     
     ShiftDAO(DAOFactory aThis) {
@@ -56,7 +62,7 @@ public class ShiftDAO {
                         //HashMap<String, String> dsValues = new HashMap<>();
                         
                         shiftValues.put("id",  rs.getString("id"));
-                        shiftValues.put("description",  rs.getString("description"));
+                        //shiftValues.put("description",  rs.getString("description"));
                         
                         shiftValues.put("shiftstart",  rs.getString("shiftstart"));
                         shiftValues.put("shiftstop",  rs.getString("shiftstop"));
@@ -124,6 +130,83 @@ public class ShiftDAO {
                         Integer shiftid = rs.getInt("shiftid");
                         shift = find(shiftid);
                     }
+                }
+            }
+        } catch (SQLException e) {
+            throw new DAOException(e.getMessage());
+        } finally {
+
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    throw new DAOException(e.getMessage());
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException e) {
+                    throw new DAOException(e.getMessage());
+                }
+            }
+        }
+        return shift;
+    }
+    
+    public Shift find(Badge b1, LocalDate localdate) {
+       
+        Shift shift = null;
+
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        
+        HashMap<String, String> override=new HashMap<String, String>();
+
+        try {
+
+            Connection conn = daoFactory.getConnection();
+
+            if (conn.isValid(0)) {
+
+                ps = conn.prepareStatement(QUERY_FIND_BADGE2);
+
+                boolean hasresults = ps.execute();
+
+                if (hasresults) {
+                    
+                    rs = ps.getResultSet();
+                    shift = find(b1);
+                    
+                    while(rs.next()){
+                        int schoverride_id=rs.getInt("id");
+                        Timestamp start = rs.getTimestamp("start");
+                        Timestamp end = rs.getTimestamp("end");
+                        int dayNum = rs.getInt("day");
+                        String badgeid= rs.getString("badgeid");
+                        int day = rs.getInt("day");
+                        int dschecduleid= rs.getInt("dailyscheduleid");
+                        
+                        override.put("id",  rs.getString("id"));
+                        //override.put("description",  rs.getString("description"));
+                        
+                        override.put("shiftstart",  rs.getString("shiftstart"));
+                        override.put("shiftstop",  rs.getString("shiftstop"));
+                        override.put("roundinterval",  rs.getString("roundinterval"));
+                        override.put("graceperiod",  rs.getString("graceperiod"));
+                        override.put("dockpenalty",  rs.getString("dockpenalty"));
+                        override.put("lunchstart",  rs.getString("lunchstart"));
+                        override.put("lunchstop",  rs.getString("lunchstop"));
+                        override.put("lunchthreshold",  rs.getString("lunchthreshold"));
+                        
+                        DailySchedule defaultschedule=new DailySchedule(override);
+                        
+                        override.put("defaultschedule", defaultschedule.toString() );
+                        
+                        shift = new Shift(override);
+                    }
+                    
+                     
                 }
             }
         } catch (SQLException e) {

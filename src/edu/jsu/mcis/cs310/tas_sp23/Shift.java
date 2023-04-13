@@ -1,5 +1,6 @@
 package edu.jsu.mcis.cs310.tas_sp23;
 
+import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalTime;
 import java.util.HashMap;
@@ -13,11 +14,15 @@ public class Shift {
     
     private final DailySchedule defaultschedule;
     
+    private HashMap<DayOfWeek, DailySchedule> dailySchedules;
+    
 
     public Shift(HashMap<String, String> shiftValues) {
         this.id = shiftValues.get("id");
         this.description = shiftValues.get("description");
         this.defaultschedule = new DailySchedule(shiftValues);
+        
+        
         
     }
     
@@ -79,7 +84,7 @@ public class Shift {
             duration = Duration.between(defaultschedule.getShiftstart(), defaultschedule.getShiftstop());
         } else {
             duration = Duration.ofHours(24).minus(Duration
-                    .between(defaultschedule.getShiftstop(), defaultschedule.getLunchstart()));
+                    .between(defaultschedule.getShiftstop(), defaultschedule.getShiftstart()));
         }
         long workDuration = duration.toMinutes();
         

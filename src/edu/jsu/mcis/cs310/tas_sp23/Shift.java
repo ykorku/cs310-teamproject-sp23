@@ -78,11 +78,11 @@ public class Shift {
     
     public DailySchedule getDailySchedule(DayOfWeek day) {
         
-    DailySchedule dailySchedule = dailySchedules.get(day);
-    
-    if (dailySchedule == null) {
-        dailySchedule = defaultschedule;
-    }
+        DailySchedule dailySchedule = dailySchedules.get(day);
+
+        if (dailySchedule == null) {
+            dailySchedule = defaultschedule;
+        }
         return dailySchedule;
         
     }

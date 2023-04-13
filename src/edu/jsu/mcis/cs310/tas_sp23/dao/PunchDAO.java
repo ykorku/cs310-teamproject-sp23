@@ -15,7 +15,7 @@ public class PunchDAO {
     private static final String QUERY_LIST_FROM_BADGE = "SELECT *, DATE(`timestamp`) AS tsdate FROM event WHERE badgeid = ? HAVING tsdate = ? ORDER BY 'timestamp';";
     private static final String QUERY_LIST_NEXT_DAY = "SELECT *, DATE(`timestamp`) AS tsdate FROM event WHERE badgeid = ? HAVING tsdate > ? ORDER BY 'timestamp' LIMIT 1;";
     private static final String QUERY_LIST_DATE_RANGE = "SELECT * FROM event WHERE ((CAST(`timestamp` AS DATE) BETWEEN ? AND ?)) AND badgeid = ?;";
-
+    //
     private final DAOFactory daoFactory;
 
     PunchDAO(DAOFactory daoFactory) {

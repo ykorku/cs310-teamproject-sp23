@@ -39,7 +39,7 @@ public class Version2_ShiftScheduleTest {
         
         /* Get Shift Object for Pay Period Starting 08-26-2018 (regular Shift 1 schedule) */
         
-        LocalDate ts = LocalDate.of(2018, Month.AUGUST, 26);
+        LocalDate ts = LocalDate.of(2018, Month.SEPTEMBER, 26);
         LocalDate begin = ts.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY));
         LocalDate end = begin.with(TemporalAdjusters.next(DayOfWeek.SATURDAY));
         
@@ -89,7 +89,7 @@ public class Version2_ShiftScheduleTest {
         
         /* Get Shift Object for Pay Period Starting 09-09-2018 (regular Shift 1 schedule) */
         
-        ts = LocalDate.of(2018, Month.SEPTEMBER, 9);
+        ts = LocalDate.of(2018, Month.AUGUST, 9);
         begin = ts.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY));
         end = begin.with(TemporalAdjusters.next(DayOfWeek.SATURDAY));
         

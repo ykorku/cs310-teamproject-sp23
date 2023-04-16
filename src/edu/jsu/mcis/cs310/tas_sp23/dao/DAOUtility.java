@@ -203,7 +203,17 @@ public final class DAOUtility {
         return json;
         
     }
-
+    
+    public static BigDecimal calculateAbsenteeism(ArrayList<Punch> punchList, Shift shift) {
+        
+        double totalHours = shift.getScheduleHours();
+        double minsWorked = calculateTotalMinutes(punchList, shift);
+        BigDecimal absenteeism = new BigDecimal(100 - (minsWorked/totalHours) * 100);
+        
+        return absenteeism;
+    }
+    
+    /*
     public static BigDecimal calculateAbsenteeism(ArrayList<Punch> punchList, Shift shift) {
         BigDecimal minsWorked = new BigDecimal(calculateTotalMinutes(punchList, shift));
         Duration tempMins;
@@ -217,11 +227,12 @@ public final class DAOUtility {
                     .between(shift.getShiftstart(),
                             shift.getShiftstop()));
         }
-        
+        System.err.println(minsWorked);
         BigDecimal scheduledMins = new BigDecimal((tempMins.toMinutes() - lunch_durations)*5);
         BigDecimal percentage = minsWorked.divide(scheduledMins, 4, RoundingMode.HALF_UP)
                 .subtract(new BigDecimal(1)).multiply(new BigDecimal(-100));
         
         return percentage;
     }
+    */
 }

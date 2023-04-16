@@ -87,6 +87,28 @@ public class Shift {
         
     }
     
+    public int getScheduleHours() {
+        
+        Duration timeWorked;
+        Duration lunch;
+        int totalHours = 0;
+        
+        for(DayOfWeek day : dailySchedules.keySet()) {
+            
+            DailySchedule dailySchedule = dailySchedules.get(day);
+            
+            timeWorked = Duration.between(dailySchedule.getShiftstart(), dailySchedule.getShiftstop());
+            lunch = Duration.between(dailySchedule.getLunchstart(), dailySchedule.getLunchstop());
+            timeWorked = timeWorked.minus(lunch);
+            totalHours += timeWorked.toMinutes();
+            
+            
+            
+        }
+
+        return totalHours;
+    }
+    
     @Override
     public String toString() {
 

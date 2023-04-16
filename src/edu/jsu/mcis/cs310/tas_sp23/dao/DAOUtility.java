@@ -4,6 +4,7 @@ import java.time.*;
 import java.util.*;
 import com.github.cliftonlabs.json_simple.*;
 import edu.jsu.mcis.cs310.tas_sp23.Badge;
+import edu.jsu.mcis.cs310.tas_sp23.DailySchedule;
 import edu.jsu.mcis.cs310.tas_sp23.EventType;
 import edu.jsu.mcis.cs310.tas_sp23.Punch;
 import edu.jsu.mcis.cs310.tas_sp23.PunchAdjustmentType;
@@ -11,6 +12,8 @@ import static edu.jsu.mcis.cs310.tas_sp23.PunchAdjustmentType.LUNCH_START;
 import static edu.jsu.mcis.cs310.tas_sp23.PunchAdjustmentType.LUNCH_STOP;
 import edu.jsu.mcis.cs310.tas_sp23.Shift;
 import java.math.BigDecimal;
+import java.math.MathContext;
+import static java.math.MathContext.DECIMAL128;
 import java.math.RoundingMode;
 
 /**
@@ -61,6 +64,22 @@ public final class DAOUtility {
     }
     
     public static int calculateTotalMinutes(ArrayList<Punch> dailypunchlist, Shift shift) {
+        
+        int total = 0;
+        for(DayOfWeek day : DayOfWeek.values()) {
+            
+            DailySchedule dailySchedule = shift.getDailySchedule(day);
+            total += calculateTotal(dailypunchlist, dailySchedule);
+            
+            
+        }
+        
+        return total;
+    }
+    
+    public static int calculateTotal(ArrayList<Punch> dailypunchlist, DailySchedule ds) {
+        
+        
         int totalMins = 0;
         LocalDateTime in = null ;
         LocalDateTime out = null ;
@@ -135,7 +154,7 @@ public final class DAOUtility {
                 out = null;
             }
 
-            if((!lunchUsed) && (minsBetween > shift.getLunchthreshold()) ) {
+            if((!lunchUsed) && (minsBetween > ds.getLunchthreshold()) ) {
                 totalMins = totalMins + (int)(minsBetween - 30);
             } else {
                 totalMins = totalMins + (int)(minsBetween);
@@ -208,7 +227,10 @@ public final class DAOUtility {
         
         double totalHours = shift.getScheduleHours();
         double minsWorked = calculateTotalMinutes(punchList, shift);
+        System.out.println(minsWorked);
+        System.out.println(totalHours);
         BigDecimal absenteeism = new BigDecimal(100 - (minsWorked/totalHours) * 100);
+        absenteeism = absenteeism.round(new MathContext(4, RoundingMode.HALF_UP));
         
         return absenteeism;
     }

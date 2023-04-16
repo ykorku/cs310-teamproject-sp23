@@ -36,8 +36,7 @@ public class Absenteeism {
         String dateText = payPeriodStart
                 .with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY))
                 .format(formatter);
-        String percent = String.format("%.2f", bigDec.floatValue());
-        
+        String percent = String.format("%.2f", bigDec.doubleValue());
         s.append('#').append(employee.getBadge().getId()).append(' ');
         s.append("(Pay Period Starting ").append(dateText).append("): ");
         s.append(percent).append("%");

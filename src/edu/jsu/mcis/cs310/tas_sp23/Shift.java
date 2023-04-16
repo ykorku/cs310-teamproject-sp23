@@ -31,47 +31,6 @@ public class Shift {
         
     }
     
-   
-    public String getId() {
-        return id;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-    
-    public LocalTime getShiftstart() {
-        return defaultschedule.getShiftstart();
-    }
-    
-    public LocalTime getShiftstop() {
-        return defaultschedule.getShiftstop();
-    }
-    
-    public int getRoundinterval() {
-        return defaultschedule.getRoundinterval();
-    }
-    
-    public int getGraceperiod() {
-        return defaultschedule.getGraceperiod();
-    }
-    
-    public int getDockpenalty() {
-        return defaultschedule.getDockpenalty();
-    }
-    
-    public LocalTime getLunchstart() {
-        return defaultschedule.getLunchstart();
-    }
-    
-    public LocalTime getLunchstop() {
-        return defaultschedule.getLunchstop();
-    }
-    
-    public int getLunchthreshold() {
-        return defaultschedule.getLunchthreshold();
-    }
-    
     public DailySchedule getDefaultschedule(){
         return defaultschedule;
     }
@@ -80,10 +39,15 @@ public class Shift {
         
         DailySchedule dailySchedule = dailySchedules.get(day);
 
-        if (dailySchedule == null) {
-            dailySchedule = defaultschedule;
-        }
+
         return dailySchedule;
+        
+    }
+    
+    public void setDailySchedule (DayOfWeek day, HashMap<String, String> override) {
+        
+        DailySchedule overrideSchedule = new DailySchedule(override);
+        dailySchedules.replace(day, defaultschedule, overrideSchedule);
         
     }
     
@@ -101,7 +65,8 @@ public class Shift {
             lunch = Duration.between(dailySchedule.getLunchstart(), dailySchedule.getLunchstop());
             timeWorked = timeWorked.minus(lunch);
             totalHours += timeWorked.toMinutes();
-            
+            System.err.println(day);
+            System.err.println(totalHours);
             
             
         }

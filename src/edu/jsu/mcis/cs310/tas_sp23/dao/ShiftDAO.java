@@ -180,7 +180,7 @@ public class ShiftDAO {
                     //rs = ps.getResultSet();
 
                     override.put("id",  rs.getString("id"));
-                    override.put("description",  rs.getString("description"));
+                    //override.put("description",  rs.getString("description"));
 
                     override.put("shiftstart",  rs.getString("shiftstart"));
                     override.put("shiftstop",  rs.getString("shiftstop"));

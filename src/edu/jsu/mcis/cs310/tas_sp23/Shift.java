@@ -87,7 +87,6 @@ public class Shift {
         
     }
     
-    
     @Override
     public String toString() {
 

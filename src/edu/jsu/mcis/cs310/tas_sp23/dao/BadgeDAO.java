@@ -7,7 +7,7 @@ import java.util.zip.CRC32;
 public class BadgeDAO {
 
     private static final String QUERY_FIND = "SELECT * FROM badge WHERE id = ?";
-    private static final String QUERY_DELETE = "DELETE FROM badge WHERE bacgeid = ? AND payperiod = ?";
+    private static final String QUERY_DELETE = "DELETE FROM badge WHERE id = ?";
     private static final String QUERY_COUNT = "SELECT COUNT(*) AS count FROM badge";
     private final DAOFactory daoFactory;
 
@@ -63,11 +63,45 @@ public class BadgeDAO {
         return badge;
     }
     
+    public boolean create(Badge badge) {
+        try {
+            Connection conn = daoFactory.getConnection();
+
+            // Check if the badge already exists
+            String checkSql = "SELECT id FROM badge WHERE description = ?";
+            PreparedStatement checkStatement = conn.prepareStatement(checkSql);
+            checkStatement.setString(1, badge.getDescription());
+            ResultSet checkResult = checkStatement.executeQuery();
+            if (checkResult.next()) {
+                // Returns true if the badge exists
+                return true;
+            }
+
+            // Generate badge ID using CRC-32 checksum 
+            CRC32 crc = new CRC32();
+            crc.update(badge.getDescription().getBytes());
+            String badgeId = String.format("%08X", crc.getValue());
+
+            // Prepare SQL statement to create badge
+            String insertSql = "INSERT INTO badge (id, description) VALUES (?, ?)";
+            PreparedStatement insertStatement = conn.prepareStatement(insertSql);
+            insertStatement.setString(1, badgeId);
+            insertStatement.setString(2, badge.getDescription());
+
+            // Check if a row was affected
+            int rowsAffected = insertStatement.executeUpdate();
+            return (rowsAffected == 1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
     public boolean delete(String id) {
         boolean success = false;
         boolean results = false;
-        int initial_count = 0;
-        int adjusted_count = 0;
+        int initial_count;
+        int adjusted_count;
 
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -76,57 +110,37 @@ public class BadgeDAO {
             Connection conn = daoFactory.getConnection();
             
             if (conn.isValid(0)) {
-                
                 ps = conn.prepareCall(QUERY_COUNT);
                 results = ps.execute();
-                rs = ps.getResultSet();  //Added this line -Esat 
-                if (results && rs.next()) {
-                    initial_count = ps.getFetchSize();
+                if (results && (ps.getFetchSize() == 0)){
+                    success = true;
+                } else if (results && (ps.getFetchSize() != 0)){
                     results = false;
-                }
 
-                ps = conn.prepareCall(QUERY_DELETE);
-                ps.setString(1, id);
-                results = ps.execute();
-                
-                if (results) {
-                    ps = conn.prepareCall(QUERY_COUNT);
+                    ps = conn.prepareCall(QUERY_DELETE);
+                    ps.setString(1, id);
                     results = ps.execute();
-                    if (results && rs.next()) {
-                        adjusted_count = ps.getFetchSize();
+                    if (results) {
+                        System.out.println("3rd if");
+                        ps = conn.prepareCall(QUERY_COUNT);
+                        results = ps.execute();
+                        if (results) {
+                            adjusted_count = ps.getFetchSize();
+                            success = true;
+                        }
                     }
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            if (ps != null) { try { ps.close(); } catch (Exception e) { e.printStackTrace(); } }
+            if (ps != null) { 
+                try { ps.close(); }
+                catch (Exception e) { e.printStackTrace(); } }
         }
-        return (initial_count > adjusted_count);
+        
+        
+        return success;
     }
     
-    public boolean create(Badge badge) {
-    
-        try {
-            Connection conn = daoFactory.getConnection();
-            // Generate badge ID using CRC-32 checksum of badge description
-            CRC32 crc = new CRC32();
-            crc.update(badge.getDescription().getBytes());
-            String badgeId = String.format("%08X", crc.getValue());
-
-            // Prepare SQL statement to insert badge into database
-            String sql = "INSERT INTO badge (id, description) VALUES (?, ?)";
-            PreparedStatement statement = conn.prepareStatement(sql);
-            statement.setString(1, badgeId);
-            statement.setString(2, badge.getDescription());
-
-            // Execute SQL statement and check if one row was affected
-            int rowsAffected = statement.executeUpdate();
-            return (rowsAffected == 1);
-        } catch (SQLException e) {
-            // Handle database errors
-            e.printStackTrace();
-        return false;
-        }    
-    }
 }

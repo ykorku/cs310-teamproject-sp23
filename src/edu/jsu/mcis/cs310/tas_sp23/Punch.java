@@ -125,9 +125,15 @@ public class Punch {
         return temp;
     }
 
-    public void adjust(Shift s) {
-        LocalDateTime rndDateTime = round_time(getOriginaltimestamp());
+    public void adjust(Shift sh) {
         
+
+            
+        DayOfWeek dayofweek = DayOfWeek.from(originalTimeStamp.toLocalDate());
+        DailySchedule s = sh.getDailySchedule(dayofweek);
+
+        LocalDateTime rndDateTime = round_time(getOriginaltimestamp());
+
         LocalTime original_time = rndDateTime.toLocalTime()
                 .truncatedTo(ChronoUnit.MINUTES);
         LocalDate original_date = rndDateTime.toLocalDate();
@@ -224,9 +230,12 @@ public class Punch {
                 default:
                     System.out.println("Default");
                     break;
-            }
+
         }
     }
+        
+        
+}
     
     public String printOriginal() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");

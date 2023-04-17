@@ -56,11 +56,10 @@ public class Version2_ShiftScheduleTest {
         /* Calculate Pay Period 08-26-2018 Absenteeism */
         
         BigDecimal percentage = DAOUtility.calculateAbsenteeism(p1, s);
-        System.err.println(percentage);
         Absenteeism a1 = new Absenteeism(e, ts, percentage);
         
         assertEquals("#D2CC71D4 (Pay Period Starting 08-26-2018): -17.50%", a1.toString());
-        //System.err.println("test");
+
         /* PART TWO */
         
         /* Get Shift Object for Pay Period Starting 09-02-2018 (should include Labor Day (09-03) override) */
@@ -83,7 +82,6 @@ public class Version2_ShiftScheduleTest {
         
         percentage = DAOUtility.calculateAbsenteeism(p2, s);
         Absenteeism a2 = new Absenteeism(e, ts, percentage);
-        System.err.println("here");
         assertEquals("#D2CC71D4 (Pay Period Starting 09-02-2018): -29.69%", a2.toString());
        
         /* PART THREE */

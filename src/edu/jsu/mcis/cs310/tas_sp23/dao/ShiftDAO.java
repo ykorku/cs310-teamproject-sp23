@@ -26,8 +26,9 @@ public class ShiftDAO {
     private static final String QUERY_FIND_BADGE = "SELECT * FROM employee WHERE badgeid = ?";
     
     private static final String QUERY_CHECK_BADGE = "SELECT * FROM scheduleoverride s WHERE badgeid = ?";
+    
     private static final String QUERY_FIND_BADGE2 = "SELECT * FROM scheduleoverride s JOIN dailyschedule d ON d.id=s.dailyscheduleid WHERE badgeid = ? AND (? BETWEEN CAST(`start` AS DATE) AND CAST(`end` AS DATE))";
-    private static final String QUERY_FIND_BADGE3 = "SELECT * FROM scheduleoverride s JOIN dailyschedule d ON d.id=s.dailyscheduleid WHERE badgeid = ? OR (? BETWEEN CAST(`start` AS DATE) AND CAST(`end` AS DATE))";
+    private static final String QUERY_FIND_BADGE3 = "SELECT * FROM scheduleoverride s JOIN dailyschedule d ON d.id=s.dailyscheduleid WHERE ? BETWEEN CAST(`start` AS DATE) AND CAST(`end` AS DATE)";
     private final DAOFactory daoFactory;
     
     ShiftDAO(DAOFactory aThis) {
@@ -72,9 +73,6 @@ public class ShiftDAO {
                         shiftValues.put("lunchstart",  rs.getString("lunchstart"));
                         shiftValues.put("lunchstop",  rs.getString("lunchstop"));
                         shiftValues.put("lunchthreshold",  rs.getString("lunchthreshold"));
-                        DailySchedule defaultschedule=new DailySchedule(shiftValues);
-                        
-                        shiftValues.put("defaultschedule", defaultschedule.toString() );
                         
                         shift = new Shift(shiftValues);
                     }
@@ -172,7 +170,7 @@ public class ShiftDAO {
                 
                 ps = conn.prepareStatement(QUERY_CHECK_BADGE);
                 ps.setString(1, id);
-                boolean hasresults = ps.execute();
+                ps.execute();
                 rs = ps.getResultSet();
                 if(rs.next()) {
                     
@@ -180,22 +178,16 @@ public class ShiftDAO {
                     ps.setString(1, id);
                     ps.setDate(2, java.sql.Date.valueOf(localdate));
                     ps.execute();
-                    rs = ps.getResultSet();
                     
                 }
+              
+                ps = conn.prepareStatement(QUERY_FIND_BADGE3);
+                ps.setDate(1, java.sql.Date.valueOf(localdate));
+                ps.execute();
                 
-                else {
-                    ps = conn.prepareStatement(QUERY_FIND_BADGE3);
-                    ps.setString(1, id);
-                    ps.setDate(2, java.sql.Date.valueOf(localdate));
-                    ps.execute();
-                    rs = ps.getResultSet();
-                }
-                
+                rs = ps.getResultSet();
                 if (rs.next()) {
                     
-
-
                     override.put("id",  rs.getString("id"));
                     //override.put("description",  rs.getString("description"));
 
@@ -209,11 +201,8 @@ public class ShiftDAO {
                     override.put("lunchthreshold",  rs.getString("lunchthreshold"));
 
                     DayOfWeek day = DayOfWeek.values()[(rs.getInt("day")) - 1];
-                    System.out.println("day of week" + day);
                     shift.setDailySchedule(day, override);
-                    System.out.println("shift start: " + rs.getString("shiftstart"));
-                    
-                     
+
                 }
                 
             }

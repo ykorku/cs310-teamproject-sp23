@@ -1,14 +1,17 @@
 
 package edu.jsu.mcis.cs310.tas_sp23;
 
+import java.time.Duration;
 import java.time.LocalTime;
 import java.util.HashMap;
 
 
 public class DailySchedule {
     
-    private final  LocalTime shiftstart, shiftstop, lunchstart, lunchstop;
+    private  final LocalTime shiftstart, shiftstop, lunchstart, lunchstop;
     private final  int roundinterval, graceperiod, dockpenalty, lunchthreshold;
+    private final long lunchDuration, shiftDuration;
+  
 
     public DailySchedule(HashMap<String, String> shiftValues) {
         
@@ -20,6 +23,8 @@ public class DailySchedule {
         this.lunchstart = LocalTime.parse(shiftValues.get("lunchstart"));
         this.lunchstop = LocalTime.parse(shiftValues.get("lunchstop"));
         this.lunchthreshold = Integer.parseInt(shiftValues.get("lunchthreshold"));
+        this.lunchDuration = (Duration.between(lunchstart, lunchstop).toMinutes());
+        this.shiftDuration = (Duration.between(shiftstart, shiftstop).toMinutes());
         
     }
     
@@ -55,6 +60,14 @@ public class DailySchedule {
     
     public int getLunchthreshold() {
         return lunchthreshold;
+    }
+    
+    public long getShiftDuration() {
+        return shiftDuration;
+    }
+    
+    public long getlunchDuration() {
+        return lunchDuration;
     }
     
 }

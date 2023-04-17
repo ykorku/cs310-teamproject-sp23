@@ -31,6 +31,42 @@ public class Shift {
         
     }
     
+    public LocalTime getShiftstart() {
+        return defaultschedule.getShiftstart();
+    }
+    
+    public LocalTime getShiftstop() {
+        return defaultschedule.getShiftstop();
+    }
+    
+    public int getRoundinterval() {
+        return defaultschedule.getRoundinterval();
+    }
+    
+    public int getGraceperiod() {
+        return defaultschedule.getGraceperiod();
+    }
+    
+    public int getDockpenalty() {
+        return defaultschedule.getDockpenalty();
+    }
+    
+    public LocalTime getLunchstart() {
+        return defaultschedule.getLunchstart();
+    }
+    
+    public LocalTime getLunchstop() {
+        return defaultschedule.getLunchstop();
+    }
+    
+    public int getLunchthreshold() {
+        return defaultschedule.getLunchthreshold();
+    }
+    
+    public long getLunchDuration() {
+        return defaultschedule.getlunchDuration();
+    }
+    
     public DailySchedule getDefaultschedule(){
         return defaultschedule;
     }
@@ -38,7 +74,10 @@ public class Shift {
     public DailySchedule getDailySchedule(DayOfWeek day) {
         
         DailySchedule dailySchedule = dailySchedules.get(day);
-
+        
+        if(dailySchedule == null) {
+            dailySchedule = defaultschedule;
+        }
 
         return dailySchedule;
         
@@ -65,13 +104,11 @@ public class Shift {
             lunch = Duration.between(dailySchedule.getLunchstart(), dailySchedule.getLunchstop());
             timeWorked = timeWorked.minus(lunch);
             totalHours += timeWorked.toMinutes();
-            System.err.println(day);
-            System.err.println(totalHours);
-            
-            
+  
         }
-
+        
         return totalHours;
+        
     }
     
     @Override

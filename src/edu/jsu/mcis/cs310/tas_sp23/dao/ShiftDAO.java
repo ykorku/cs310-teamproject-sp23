@@ -9,7 +9,9 @@ import java.sql.SQLException;
 import java.util.HashMap;
 
 /**
- *
+ * This class is a data access object (DAO) for managing Shift objects in a TAS (Time and Attendance System) application.
+ * It provides methods to interact with a database to find Shift objects based on different criteria.
+ * 
  * @author yunus
  */
 public class ShiftDAO {
@@ -20,10 +22,22 @@ public class ShiftDAO {
 
     private final DAOFactory daoFactory;
     
+    /**
+     * Constructs a ShiftDAO object with the specified DAOFactory.
+     * 
+     * @param daoFactory the DAOFactory to be used
+     */
     ShiftDAO(DAOFactory aThis) {
         this.daoFactory = aThis;
     }
     
+    /**
+     * Finds a Shift object based on its ID.
+     * 
+     * @param id the ID of the Shift to find
+     * @return the Shift object with the specified ID, or null if not found
+     * @throws DAOException if a database error occurs
+     */
     public Shift find(int i1) {
         
         Shift shift = null;
@@ -88,7 +102,13 @@ public class ShiftDAO {
         }
         return shift;
     }
-    
+    /**
+     * Finds a Shift object based on a Badge object.
+     * 
+     * @param badge the Badge object to find the Shift for
+     * @return the Shift object associated with the Badge, or null if not found
+     * @throws DAOException if a database error occurs
+     */
     public Shift find(Badge b1) {
        
         Shift shift = null;

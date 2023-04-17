@@ -5,7 +5,9 @@ import java.time.LocalTime;
 import java.util.HashMap;
 
 /**
- *
+ * This class represents a shift with its associated properties, such as shift start and stop times, lunch start and stop times,
+ * round interval, grace period, dock penalty, and lunch threshold.
+ * 
  * @author yunus
  */
 public class Shift {
@@ -15,7 +17,11 @@ public class Shift {
     
     private final LocalTime lunchduration = null, shiftduration = null;
     
-
+    /**
+     * Constructs a Shift object with the given shift values.
+     * 
+     * @param shiftValues a HashMap containing the shift values
+     */
     public Shift(HashMap<String, String> shiftValues) {
         this.id = shiftValues.get("id");
         this.description = shiftValues.get("description");
@@ -32,46 +38,91 @@ public class Shift {
         
         this.lunchthreshold = Integer.parseInt(shiftValues.get("lunchthreshold"));
     }
-
+    /**
+     * Returns the ID of the shift.
+     * 
+     * @return the ID of the shift
+     */
     public String getId() {
         return id;
     }
-
+    /**
+     * Returns the description of the shift.
+     * 
+     * @return the description of the shift
+     */
     public String getDescription() {
         return description;
     }
-    
+    /**
+     * Returns the start time of the shift.
+     * 
+     * @return the start time of the shift
+     */
     public LocalTime getShiftstart() {
         return shiftstart;
     }
-    
+    /**
+     * Returns the stop time of the shift.
+     * 
+     * @return the stop time of the shift
+     */
     public LocalTime getShiftstop() {
         return shiftstop;
     }
-    
+    /**
+     * Returns the round interval of the shift.
+     * 
+     * @return the round interval of the shift
+     */
     public int getRoundinterval() {
         return roundinterval;
     }
-    
+    /**
+     * Returns the grace period of the shift.
+     * 
+     * @return the grace period of the shift
+     */
     public int getGraceperiod() {
         return graceperiod;
     }
-    
+    /**
+     * Returns the dock penalty of the shift.
+     * 
+     * @return the dock penalty of the shift
+     */
     public int getDockpenalty() {
         return dockpenalty;
     }
-    
+    /**
+     * Returns the lunch start time of the shift.
+     * 
+     * @return the lunch start time of the shift
+     */
     public LocalTime getLunchstart() {
         return lunchstart;
     }
-    
+    /**
+     * Returns the lunch stop time of the shift.
+     * 
+     * @return the lunch stop time of the shift
+     */
     public LocalTime getLunchstop() {
         return lunchstop;
     }
-    
+    /**
+     * Returns the lunch threshold of the shift.
+     * 
+     * @return the lunch threshold of the shift
+     */
     public int getLunchthreshold() {
         return lunchthreshold;
     }
+    /**
+     * Returns a string representation of the shift object.
+     * 
+     * @return a string representation of the shift object
+     */
     
     @Override
     public String toString() {

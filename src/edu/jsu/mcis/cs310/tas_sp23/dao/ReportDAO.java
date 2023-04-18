@@ -25,7 +25,7 @@ public class ReportDAO {
     private final DAOFactory daoFactory;
     
     /**
-     * Constructs a ReportDAO object with the given DAOFactory.
+     * <p>Constructs a ReportDAO object with the given DAOFactory.</p>
      * 
      * @param daoFactory the DAOFactory to use for obtaining database connections
      */
@@ -34,7 +34,7 @@ public class ReportDAO {
     }
     
     /**
-     * Generates a badge summary report for employees.
+     * <p>Generates a badge summary report for employees.</p>
      * 
      * @param departmentId the ID of the department to generate the report for, or null to generate report for all departments
      * @return a JSON string representation of the badge summary report

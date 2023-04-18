@@ -12,7 +12,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- *
+ * A Data Access Object (DAO) for retrieving report data from the database.
+ * Provides methods for generating badge summary report for employees.
+ * 
  * @author yunus
  */
 public class ReportDAO {
@@ -22,10 +24,22 @@ public class ReportDAO {
             
     private final DAOFactory daoFactory;
     
+    /**
+     * Constructs a ReportDAO object with the given DAOFactory.
+     * 
+     * @param daoFactory the DAOFactory to use for obtaining database connections
+     */
     ReportDAO(DAOFactory aThis) {
         this.daoFactory = aThis;
     }
-
+    
+    /**
+     * Generates a badge summary report for employees.
+     * 
+     * @param departmentId the ID of the department to generate the report for, or null to generate report for all departments
+     * @return a JSON string representation of the badge summary report
+     * @throws DAOException if a database error occurs
+     */
     public String getBadgeSummary(Integer departmentId) {
         
         PreparedStatement ps = null;

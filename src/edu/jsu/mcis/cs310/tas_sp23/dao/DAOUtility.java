@@ -62,18 +62,15 @@ public final class DAOUtility {
     }
     
     public static int calculateTotalMinutes(ArrayList<Punch> punchlist, Shift sh) {
-        
         int minsWorked = 0;
         int total = 0;
         boolean stopLunch = false;
         boolean startLunch = false;
         
         for(int i = 0; i < punchlist.size(); i++) {
-            
             int lastPunch = (punchlist.size() - 1);
             
             if(lastPunch > i) {
-                
                 Punch punch = punchlist.get(i);
                 Punch pairPunch = punchlist.get(i + 1);
                 
@@ -81,46 +78,30 @@ public final class DAOUtility {
                 DailySchedule sl = sh.getDailySchedule(day);
                 
                 if((punch.getPunchtype() == EventType.CLOCK_IN) && (pairPunch.getPunchtype() == EventType.CLOCK_OUT)) {
-                   
                     if((punch.getAdjustmentType()) == (PunchAdjustmentType.LUNCH_START)) {
                         startLunch = true;
                     }
-                    
                     if((punch.getAdjustmentType()) == (PunchAdjustmentType.LUNCH_STOP)) {
                         stopLunch = true;
                     }
-                    
                     Duration duration = Duration.between(punch.getAdjustedtimestamp(), pairPunch.getAdjustedtimestamp());
                     total += duration.toMinutes();
-
-                }
-                
-                else {
-                    
+                } else {
                     if(pairPunch.getPunchtype()!= EventType.TIME_OUT) {
                         minsWorked += total;
                     }
-                    
                     total = 0;
                     stopLunch = false;
                     startLunch = false;
-                    
                 }
-
                 if((total > sh.getLunchthreshold()) && (!(stopLunch && startLunch))) {
                         total -= sh.getLunchDuration();
                 }
-                
-            }
-        
-            else {
+            } else {
                 minsWorked += total;
             }
-            
         }
-        
         return minsWorked;
-        
     }
 
     public static String getPunchListPlusTotalsAsJSON(ArrayList<Punch> punchlist, Shift shift){
@@ -180,17 +161,14 @@ public final class DAOUtility {
         String json = Jsoner.serialize(jsonData2);
 
         return json;
-        
     }
     
     public static BigDecimal calculateAbsenteeism(ArrayList<Punch> punchList, Shift shift) {
-        
         double totalHours = shift.getScheduleHours();
         double minsWorked = calculateTotalMinutes(punchList, shift);
-        BigDecimal absenteeism = new BigDecimal(100 - (minsWorked/totalHours) * 100);
+        BigDecimal absenteeism = new BigDecimal(100 - ((minsWorked/totalHours) * 100));
         absenteeism = absenteeism.round(new MathContext(4, RoundingMode.HALF_UP));
-        return absenteeism;
         
+        return absenteeism;
     }
-
 }

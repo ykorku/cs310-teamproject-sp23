@@ -84,12 +84,6 @@ public class Punch {
     public PunchAdjustmentType getAdjustmentType() {
         return adjustmentType;
     }
-
-    private long adjust_helper(LocalTime start, LocalTime time, int round) {
-        //adjustmentType = adjustmentType.INTERVAL_ROUND;
-        return ((Math.floorDiv((Duration.between(start, time)
-                .toMinutes()), round))+1)*round;
-    }
     
     private LocalTime over_schedule(int round) {
         LocalTime original = originalTimeStamp.toLocalTime();
@@ -117,20 +111,35 @@ public class Punch {
         LocalDateTime temp = original;
         int sec = original.toLocalTime().getSecond();
         TimeZone tz = TimeZone.getDefault();
-        
         if(sec >= 30) {
             temp = original.plusMinutes(1);
         }
         
         return temp;
     }
+    
+    private LocalTime adjustment_helper(LocalTime original) {
+        LocalTime ariginal = original;
+        LocalTime adjusted;
+        
+        int hour = original.getHour();
+        int mins = original.getMinute();
+        
+        if (((mins%15)>7) && ((mins/15)>=3)) {
+            hour = hour + 1;
+            mins = 0;
+        } else if (((mins%15)>7) && ((mins/15)<3)) {
+            mins = (((mins/15)+1)*15);
+        } else if ((mins%15)<=7) {
+            mins = ((mins/15)*15);
+        }
+        adjusted = LocalTime.of(hour, mins);
+        return adjusted;
+    }
 
     public void adjust(Shift sh) {
-        
-
-            
-        DayOfWeek dayofweek = DayOfWeek.from(originalTimeStamp.toLocalDate());
-        DailySchedule s = sh.getDailySchedule(dayofweek);
+        DayOfWeek workDay = DayOfWeek.from(originalTimeStamp.toLocalDate());
+        DailySchedule s = sh.getDailySchedule(workDay);
 
         LocalDateTime rndDateTime = round_time(getOriginaltimestamp());
 
@@ -160,7 +169,7 @@ public class Punch {
         LocalTime lunchStart = s.getLunchstart();
         LocalTime lunchStop = s.getLunchstop();
         // Weekday time adjustment
-        if (!(day.equals("saturday") || day.equals("sunday"))) {
+        if (!(workDay.equals(DayOfWeek.SATURDAY) || workDay.equals(DayOfWeek.SUNDAY))) {
             switch(punch_type) {
                 case "CLOCK IN":
                     // Adjust lunch punch in to end of lunch
@@ -177,10 +186,12 @@ public class Punch {
                     } else if (original_time.isBefore(startRound)) {
                         adjustedTimeStamp = LocalDateTime.of(original_date,
                                 over_schedule(s.getRoundinterval()));
-
-                    } else if (original_time.isAfter(startGrace) || original_time.equals(startDock)) {
+                    } else if (original_time.isAfter(startGrace) && original_time.equals(startDock)) {
                         adjustedTimeStamp = LocalDateTime.of(original_date, startDock);
                         adjustmentType = adjustmentType.SHIFT_DOCK;
+                    } else {
+                        adjustedTimeStamp = LocalDateTime
+                                .of(original_date, adjustment_helper(original_time));
                     }
                     break;
                 case "CLOCK OUT":
@@ -204,6 +215,9 @@ public class Punch {
                         } else if (adjustedTimeStamp.equals(rndDateTime) || adjustedTimeStamp.isBefore(rndDateTime)) {
                             adjustmentType = adjustmentType.SHIFT_DOCK;
                         }
+                    } else {
+                        adjustedTimeStamp = LocalDateTime
+                                .of(original_date, adjustment_helper(original_time));
                     }
                     break;
                 case "TIME OUT":
@@ -230,11 +244,8 @@ public class Punch {
                 default:
                     System.out.println("Default");
                     break;
-
         }
     }
-        
-        
 }
     
     public String printOriginal() {

@@ -12,33 +12,27 @@ import org.junit.*;
 import static org.junit.Assert.*;
 
 public class Version2_ShiftScheduleTest {
-    
     private DAOFactory daoFactory;
 
     @Before
     public void setup() {
-
         daoFactory = new DAOFactory("tas.jdbc");
-
     }
-    
+
     @Test
     public void test1TemporaryOverrideAllEmployees() {
-        
+        System.out.println("Test 1");
         BadgeDAO badgeDAO = daoFactory.getBadgeDAO();
         EmployeeDAO employeeDAO = daoFactory.getEmployeeDAO();
         PunchDAO punchDAO = daoFactory.getPunchDAO();
         ShiftDAO shiftDAO = daoFactory.getShiftDAO();
         
         /* Create Badge end Employee Objects */
-        
         Badge b = badgeDAO.find("D2CC71D4");
         Employee e = employeeDAO.find(b);
         
         /* PART ONE */
-        
         /* Get Shift Object for Pay Period Starting 08-26-2018 (regular Shift 1 schedule) */
-        
         LocalDate ts = LocalDate.of(2018, Month.AUGUST, 26);
         LocalDate begin = ts.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY));
         LocalDate end = begin.with(TemporalAdjusters.next(DayOfWeek.SATURDAY));
@@ -46,7 +40,6 @@ public class Version2_ShiftScheduleTest {
         Shift s = shiftDAO.find(b, ts);
         
         /* Retrieve Punch List #1 */
-        
         ArrayList<Punch> p1 = punchDAO.list(b, begin, end);
         
         for (Punch p : p1) {
@@ -54,16 +47,13 @@ public class Version2_ShiftScheduleTest {
         }
         
         /* Calculate Pay Period 08-26-2018 Absenteeism */
-        
         BigDecimal percentage = DAOUtility.calculateAbsenteeism(p1, s);
         Absenteeism a1 = new Absenteeism(e, ts, percentage);
         
         assertEquals("#D2CC71D4 (Pay Period Starting 08-26-2018): -17.50%", a1.toString());
 
         /* PART TWO */
-        
         /* Get Shift Object for Pay Period Starting 09-02-2018 (should include Labor Day (09-03) override) */
-        
         ts = LocalDate.of(2018, Month.SEPTEMBER, 2);
         begin = ts.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY));
         end = begin.with(TemporalAdjusters.next(DayOfWeek.SATURDAY));
@@ -71,7 +61,6 @@ public class Version2_ShiftScheduleTest {
         s = shiftDAO.find(b, ts);
         
         /* Retrieve Punch List #2 */
-        
         ArrayList<Punch> p2 = punchDAO.list(b, begin, end);
         
         for (Punch p : p2) {
@@ -79,15 +68,12 @@ public class Version2_ShiftScheduleTest {
         }
         
         /* Calculate Pay Period 09-02-2018 Absenteeism */
-        
         percentage = DAOUtility.calculateAbsenteeism(p2, s);
         Absenteeism a2 = new Absenteeism(e, ts, percentage);
         assertEquals("#D2CC71D4 (Pay Period Starting 09-02-2018): -29.69%", a2.toString());
        
         /* PART THREE */
-        
         /* Get Shift Object for Pay Period Starting 09-09-2018 (regular Shift 1 schedule) */
-        
         ts = LocalDate.of(2018, Month.SEPTEMBER, 9);
         begin = ts.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY));
         end = begin.with(TemporalAdjusters.next(DayOfWeek.SATURDAY));
@@ -95,7 +81,6 @@ public class Version2_ShiftScheduleTest {
         s = shiftDAO.find(b, ts);
         
         /* Retrieve Punch List #3 */
-        
         ArrayList<Punch> p3 = punchDAO.list(b, begin, end);
         
         for (Punch p : p3) {
@@ -103,7 +88,6 @@ public class Version2_ShiftScheduleTest {
         }
         
         /* Calculate Pay Period 09-09-2018 Absenteeism */
-        
         percentage = DAOUtility.calculateAbsenteeism(p3, s);
         Absenteeism a3 = new Absenteeism(e, ts, percentage);
         
@@ -113,7 +97,7 @@ public class Version2_ShiftScheduleTest {
     
     @Test
     public void test2TemporaryOverrideIndividualEmployee() {
-        
+        System.out.println("Test 2");
         BadgeDAO badgeDAO = daoFactory.getBadgeDAO();
         EmployeeDAO employeeDAO = daoFactory.getEmployeeDAO();
         PunchDAO punchDAO = daoFactory.getPunchDAO();
@@ -231,7 +215,7 @@ public class Version2_ShiftScheduleTest {
     
     @Test
     public void test3RecurringOverrideIndividualEmployee() {
-        
+        System.out.println("Test 3");
         BadgeDAO badgeDAO = daoFactory.getBadgeDAO();
         EmployeeDAO employeeDAO = daoFactory.getEmployeeDAO();
         PunchDAO punchDAO = daoFactory.getPunchDAO();

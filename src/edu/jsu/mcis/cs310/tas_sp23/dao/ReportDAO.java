@@ -6,6 +6,7 @@ package edu.jsu.mcis.cs310.tas_sp23.dao;
 
 import com.github.cliftonlabs.json_simple.JsonArray;
 import com.github.cliftonlabs.json_simple.JsonObject;
+import com.github.cliftonlabs.json_simple.Jsoner;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,8 +17,8 @@ import java.sql.SQLException;
  */
 public class ReportDAO {
     
-    private static final String QUERY_FIND = "SELECT firstname, middlename, lastname, employee.departmentid, employeetype.description, badge.description, department.description  FROM employee JOIN department ON employee.departmentid=department.id JOIN employeetype ON employee.employeetypeid=employeetype.id JOIN badge ON employee.badgeid=badge.id ORDER BY badge.description";
-    private static final String QUERY_FIND_byID ="SELECT firstname, middlename, lastname, employee.departmentid, employeetype.description, badge.description, department.description  FROM employee JOIN department ON employee.departmentid=department.id JOIN employeetype ON employee.employeetypeid=employeetype.id JOIN badge ON employee.badgeid=badge.id WHERE employee.departmentid=? ORDER BY badge.description ";
+    private static final String QUERY_FIND = "SELECT firstname, middlename, lastname, employee.departmentid, employeetype.description, badge.description, department.description, badgeid  FROM employee JOIN department ON employee.departmentid=department.id JOIN employeetype ON employee.employeetypeid=employeetype.id JOIN badge ON employee.badgeid=badge.id ORDER BY badge.description";
+    private static final String QUERY_FIND_byID ="SELECT firstname, middlename, lastname, employee.departmentid, employeetype.description, badge.description, department.description, badgeid  FROM employee JOIN department ON employee.departmentid=department.id JOIN employeetype ON employee.employeetypeid=employeetype.id JOIN badge ON employee.badgeid=badge.id WHERE employee.departmentid=? ORDER BY badge.description ";
             
     private final DAOFactory daoFactory;
     
@@ -25,7 +26,7 @@ public class ReportDAO {
         this.daoFactory = aThis;
     }
 
-    public JsonArray getBadgeSummary(Integer departmentId) {
+    public String getBadgeSummary(Integer departmentId) {
         
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -64,7 +65,7 @@ public class ReportDAO {
                         jsonObject.put("badgeid", badgeid);
                         jsonObject.put("name", name);  
                         jsonObject.put("department", department);
-                        jsonObject.put("employeetype", employeetype);
+                        jsonObject.put("type", employeetype);
 
                         jsonArray.add(jsonObject);
                     }
@@ -88,8 +89,8 @@ public class ReportDAO {
                 }
             }
         }
-
-        return jsonArray;
+        String json = Jsoner.serialize(jsonArray);
+        return json;
     }
 
 }

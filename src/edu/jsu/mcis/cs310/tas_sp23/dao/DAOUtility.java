@@ -94,7 +94,7 @@ public final class DAOUtility {
                     stopLunch = false;
                     startLunch = false;
                 }
-                if((total > sh.getLunchthreshold()) && (!(stopLunch && startLunch))) {
+                if((total > sl.getLunchthreshold()) && (!(stopLunch && startLunch))) {
                         total -= sh.getLunchDuration();
                 }
             } else {

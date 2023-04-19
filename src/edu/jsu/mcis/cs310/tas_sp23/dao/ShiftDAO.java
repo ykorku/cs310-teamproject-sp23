@@ -158,6 +158,7 @@ public class ShiftDAO {
 
         PreparedStatement ps = null;
         ResultSet rs = null;
+        boolean hasBadge = false;
         
         HashMap<String, String> override=new HashMap<String, String>();
 
@@ -174,11 +175,6 @@ public class ShiftDAO {
                 rs = ps.getResultSet();
                 if(rs.next()) {
                     
-                    ps = conn.prepareStatement(QUERY_FIND_BADGE2);
-                    ps.setString(1, id);
-                    ps.setDate(2, java.sql.Date.valueOf(localdate));
-                    ps.execute();
-                    
                 }
               
                 ps = conn.prepareStatement(QUERY_FIND_BADGE3);
@@ -186,6 +182,15 @@ public class ShiftDAO {
                 ps.execute();
                 
                 rs = ps.getResultSet();
+                
+                if(hasBadge) {
+                    ps = conn.prepareStatement(QUERY_FIND_BADGE2);
+                    ps.setString(1, id);
+                    ps.setDate(2, java.sql.Date.valueOf(localdate));
+                    ps.execute();
+                    
+                }
+                
                 if (rs.next()) {
                     
                     override.put("id",  rs.getString("id"));

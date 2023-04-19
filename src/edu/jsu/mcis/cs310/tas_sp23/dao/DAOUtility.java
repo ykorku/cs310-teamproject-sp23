@@ -20,9 +20,24 @@ import java.math.RoundingMode;
  * individual static methods.
  */
 public final class DAOUtility {
+    
+        /**
+         * <p> Integer constant for substring start. </p>
+         */
         static final int START_OF_SUBSTRING = 20;
+        
+        /**
+         * <p> Integer constant for substring end. </p>
+         */
         static final int END_OF_SUBSTRING = 44;
     
+    
+    /**
+     * <p> Utility method that take a punch list for a single day as a paremeter
+     * and serializes it into json format. </p>
+     * @param dailyPunchList represents the daily list of punches for an employee
+     * @return a serialized json string
+     */ 
     public static String getPunchListAsJSON(ArrayList<Punch> dailyPunchList) {
         JsonArray jsonData = new JsonArray();
         int dailyPunchList_size = dailyPunchList.size();
@@ -61,6 +76,12 @@ public final class DAOUtility {
         return json;
     }
     
+    /**
+     * <p> Helper method to calculate total minutes worked on a shift. </p>
+     * @param dailypunchlist represents the daily list of punches for an employee
+     * @param shift represents the shift of an employee
+     * @return total minutes work on a given shift
+     */
     public static int calculateTotalMinutes(ArrayList<Punch> punchlist, Shift sh) {
         int minsWorked = 0;
         int total = 0;
@@ -103,7 +124,14 @@ public final class DAOUtility {
         }
         return minsWorked;
     }
-
+    
+    /**
+     * <p> Helper method that returns an absenteeism percentage, total minutes worked,
+     * and punch list in json format. </p>
+     * @param punchlist represents the shift of an employee
+     * @param shift represents the shift of an employee
+     * @return absenteeism, total minutes, and punch list serialized into json
+     */
     public static String getPunchListPlusTotalsAsJSON(ArrayList<Punch> punchlist, Shift shift){
         
         JsonArray jsonData = new JsonArray();
@@ -162,7 +190,13 @@ public final class DAOUtility {
 
         return json;
     }
-    
+
+    /**
+     * <p> Helper method that calculates total absenteeism as a percentage value. </p>
+     * @param punchList represents the punch list of shifts of an employee
+     * @param shift represents the shift of an employee
+     * @return absenteeism expressed as a percentage value
+     */
     public static BigDecimal calculateAbsenteeism(ArrayList<Punch> punchList, Shift shift) {
         double totalHours = shift.getScheduleHours();
         double minsWorked = calculateTotalMinutes(punchList, shift);

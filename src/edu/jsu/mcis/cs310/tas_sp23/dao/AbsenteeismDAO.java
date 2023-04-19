@@ -6,18 +6,57 @@ import java.math.BigDecimal;
 import java.sql.*;
 import java.time.LocalDate;
 
+
+/**
+ * <p> The Absenteeism class provides an interface for accessing, modifying, and
+ * creating Employee objects in the database. </p>
+ * @author Dalton Estes
+ */
 public class AbsenteeismDAO {
     
+    /**
+     * <p> A string query statement in SQL format used by {@link #find find()} 
+     * method to interact with the database to find an employee with a specific
+     * id. </p>
+     */
     private static final String QUERY_FIND = "SELECT percentage FROM absenteeism WHERE employeeid=? AND payperiod=?";
+    
+    /**
+     * <p> A string query statement in SQL format used by {@link #create create()} 
+     * method to insert into the database an employee's absenteeism with a specific
+     * id. </p>
+     */
     private static final String QUERY_CREATE = "INSERT INTO absenteeism (employeeid, payperiod, percentage) " + "VALUES (?, ?, ?)";
+    
+    /**
+     * <p> A string query statement in SQL format used by {@link #create create()} 
+     * method to delete from the database an employee's absenteeism with a specific
+     * id. </p>
+     */
     private static final String QUERY_DELETE = "DELETE FROM absenteeism WHERE employeeid = ? AND payperiod = ?";
     
+    /**
+     * <p> A DAOFactory object used by {@link #AbsenteeismDAO AbsenteeismDAO()} to construct
+     * an AbsenteeismDAO object. </p>
+     */
     private final DAOFactory daoFactory;
 
+    /**
+    * <p> Constructs an AbsenteeismDAO object with the provided DAOFactory. </p>
+    * @param daoFactory the DAOFactory used to create the DAO objects
+    */
     public AbsenteeismDAO(DAOFactory daoFactory) {
         this.daoFactory = daoFactory;
     }
     
+    /**
+     * <p> Method for finding absenteeism entries within the database and 
+     * returning them. </p>
+     * @param employee represents an employee of the company within the database
+     * @param payPeriodStart time variable representing the start of a pay period
+     * @return Absenteeism object representing an employee's absenteeism as a 
+     * percentage
+     */
     public Absenteeism find(Employee employee, LocalDate payPeriodStart){
         Absenteeism abs = null;
         PreparedStatement ps = null;
@@ -50,6 +89,10 @@ public class AbsenteeismDAO {
         return abs;
     }
     
+    /**
+     * <p> This is a method for creating absentee entries within the database. </p>
+     * @param absent Absenteeism object representing an employees absence 
+     */
     public void create(Absenteeism absent) {
     Connection conn = null;
     PreparedStatement ps_create = null;

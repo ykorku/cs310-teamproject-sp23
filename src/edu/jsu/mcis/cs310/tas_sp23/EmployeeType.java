@@ -32,7 +32,7 @@ public enum EmployeeType {
     
     /**
      * <p> toString method returning description. </p>
-     * @return 
+     * @return description as a string
      */
     @Override
     public String toString() {

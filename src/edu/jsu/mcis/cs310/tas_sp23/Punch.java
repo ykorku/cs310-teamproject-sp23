@@ -49,9 +49,9 @@ public class Punch {
     
     /**
      * <p> This method is the constructor for existing punches. </p>
-     * @param terminalid
-     * @param badge
-     * @param punchtype 
+     * @param terminalid represents the terminal used
+     * @param badge represents the badge of the employee
+     * @param punchtype represents the type of punch
      */
     public Punch(int terminalid, Badge badge, EventType punchtype) {
         
@@ -65,11 +65,12 @@ public class Punch {
     
     /**
      * <p> This method is the constructor for new punches. </p>
-     * @param id
-     * @param terminalid
-     * @param badge
-     * @param originalTimeStamp
-     * @param punchtype 
+     * @param id represents the id of the employee
+     * @param terminalid represents the terminal used
+     * @param badge represents the id of the employee
+     * @param originalTimeStamp represents the or original timestamp and not the
+     * adjusted one
+     * @param punchtype represents the type of punch
      */
     public Punch(int id, int terminalid, Badge badge,
             LocalDateTime originalTimeStamp, EventType punchtype) {
@@ -142,9 +143,9 @@ public class Punch {
     /**
      * <p> This method is a helper method for the {@link #adjust adjust()}
      * method. computes the duration between the employee's start and end time. </p> 
-     * @param start
-     * @param time
-     * @param round
+     * @param start represents the start time
+     * @param time represents the time
+     * @param round represents the rounding integer 
      * @return The duration between the employee's start and end time in
      * minutes.
      */
@@ -160,7 +161,7 @@ public class Punch {
      * employee's start or end time needs to be rounded to their schedule
      * start or end time. It applies the round and returns the adjusted time in
      * minutes. </p>
-     * @param round
+     * @param round represents the rounding integer
      * @return The adjusted time according to the employee's schedule.
      */
     private LocalTime over_schedule(int round) {
@@ -186,9 +187,9 @@ public class Punch {
     }
     
     /**
-     * <p> This method is a a helper method for the {@
-     * @param original
-     * @return 
+     * <p> This method is a a helper method for the {@link #adjust adjust()} method. </p>
+     * @param original represents the original time
+     * @return temporal time adjustment
      */
     private LocalDateTime round_time(LocalDateTime original) {
         
@@ -203,6 +204,11 @@ public class Punch {
         
     }
     
+    /**
+     * <p> Helper method used by {@link #adjust adjust()}. </p>
+     * @param original represents the original time
+     * @return adjusted time
+     */
     private LocalTime adjustment_helper(LocalTime original) {
         LocalTime ariginal = original;
         LocalTime adjusted;
@@ -222,6 +228,11 @@ public class Punch {
         return adjusted;
     }
 
+    /**
+     * <p> Adjusts the time of a clock in or clock out depending on a wide variety 
+     * of cases. </p>
+     * @param sh represents a shift object
+     */
     public void adjust(Shift sh) {
         DayOfWeek workDay = DayOfWeek.from(originalTimeStamp.toLocalDate());
         DailySchedule s = sh.getDailySchedule(workDay);

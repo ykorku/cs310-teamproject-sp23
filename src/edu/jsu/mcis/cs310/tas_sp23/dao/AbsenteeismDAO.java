@@ -8,7 +8,7 @@ import java.time.LocalDate;
 
 
 /**
- * <p> The Absenteeism class provides an interface for accessing, modifying, and
+ * <p> The AbsenteeismDAO class provides an interface for accessing, modifying, and
  * creating Employee objects in the database. </p>
  * @author Dalton Estes
  */

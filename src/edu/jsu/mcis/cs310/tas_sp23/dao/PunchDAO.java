@@ -9,19 +9,62 @@ import java.time.*;
 import java.util.ArrayList;
 import java.util.TimeZone;
 
+/**
+ * <p> The PunchDAO class provides an interface for accessing, modifying, and
+ * creating punch objects in the database. </p>
+ * @author Dalton Estes
+ */
 public class PunchDAO {
 
+    /**
+     * <p> A string query statement in SQL format used by {@link #find find()} 
+     * method to interact with the database to find a badge with a specific
+     * id. </p>
+     */
     private static final String QUERY_FIND_FROM_ID = "SELECT * FROM event WHERE id = ?";
+    
+    /**
+     * <p> A string query statement in SQL format used by {@link #list list()} 
+     * method to interact with the database to find a badge with a specific
+     * id between a range of dates. </p>
+     */
     private static final String QUERY_LIST_FROM_BADGE = "SELECT *, DATE(`timestamp`) AS tsdate FROM event WHERE badgeid = ? HAVING tsdate = ? ORDER BY 'timestamp';";
+    
+    /**
+     * <p> A string query statement in SQL format used by {@link #list list()} 
+     * method to interact with the database to find a badge with a specific
+     * id between a range of dates and returning the next day after the last day
+     * in the range. </p>
+     */
     private static final String QUERY_LIST_NEXT_DAY = "SELECT *, DATE(`timestamp`) AS tsdate FROM event WHERE badgeid = ? HAVING tsdate > ? ORDER BY 'timestamp' LIMIT 1;";
+    
+    /**
+     * <p> A string query statement in SQL format used by {@link #list list()} 
+     * method to interact with the database to find a badge with a specific
+     * id over a range of dates and list it. </p>
+     */
     private static final String QUERY_LIST_DATE_RANGE = "SELECT * FROM event WHERE ((CAST(`timestamp` AS DATE) BETWEEN ? AND ?)) AND badgeid = ?;";
-    //
+    
+    /**
+     * <p> A DAOFactory object used by {@link #PunchDAO PunchDAO()} to construct
+     * a PunchDAO object. </p>
+     */
     private final DAOFactory daoFactory;
 
+    /**
+     * <p> Constructs a PunchDAO object with the provided DAOFactory. </p>
+     * @param daoFactory daoFactory object
+     */
     PunchDAO(DAOFactory daoFactory) {
         this.daoFactory = daoFactory;
     }
 
+    /**
+     * <p> Find method that interacts with the database to find punches of a 
+     * specified id. </p>
+     * @param id represents an id
+     * @return punch
+     */
     public Punch find(int id) {
 
         Punch punch = null;
@@ -83,6 +126,13 @@ public class PunchDAO {
         return punch;
     }
 
+    /**
+     * <p> list method that interacts with the database to find punches of a 
+     * specified id for a day. </p>
+     * @param badge represents a badge
+     * @param day represents a day
+     * @return punch
+     */
     public ArrayList list (Badge badge, LocalDate day){
 
         ArrayList<Punch> punchArray = new ArrayList<>();
@@ -174,7 +224,14 @@ public class PunchDAO {
         return punchArray;
     }
 
-    // Modified ArrayList list (Badge badge, LocalDate day) method
+    /**
+     * <p> List method that interacts with the database to find punches of a 
+     * specified id for a range of dates. </p>
+     * @param badge representing badge object
+     * @param start representing start of range of dates
+     * @param end representing end of range of dates
+     * @return punch array of list of punches
+     */
     public ArrayList list (Badge badge, LocalDate start, LocalDate end){
 
         ArrayList<Punch> punchArray = new ArrayList<>();
@@ -269,6 +326,12 @@ public class PunchDAO {
         return punchArray;
     }
     
+    /**
+     * <p> Create method that interacts with the database to create punches of a 
+     * specified id </p>
+     * @param punch representing a punch
+     * @return punchId
+     */
     public int create(Punch punch) {
         
         int punchId = 0;

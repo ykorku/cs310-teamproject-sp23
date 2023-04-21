@@ -18,6 +18,7 @@ import java.math.RoundingMode;
  * Utility class for DAOs.  This is a final, non-constructable class containing
  * common DAO logic and other repeated and/or standardized code, refactored into
  * individual static methods.
+ * @author Dalton Estes
  */
 public final class DAOUtility {
     
@@ -78,8 +79,8 @@ public final class DAOUtility {
     
     /**
      * <p> Helper method to calculate total minutes worked on a shift. </p>
-     * @param dailypunchlist represents the daily list of punches for an employee
-     * @param shift represents the shift of an employee
+     * @param punchlist represents the daily list of punches for an employee
+     * @param sh represents the shift of an employee
      * @return total minutes work on a given shift
      */
     public static int calculateTotalMinutes(ArrayList<Punch> punchlist, Shift sh) {

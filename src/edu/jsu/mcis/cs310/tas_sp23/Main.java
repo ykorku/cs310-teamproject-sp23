@@ -11,7 +11,7 @@ public class Main {
     
     /**
      * <p> This method uses a database class to test database connection. </p>
-     * @param args 
+     * @param args arguments 
      */
     public static void main(String[] args) {
         

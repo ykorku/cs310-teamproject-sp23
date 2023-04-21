@@ -4,17 +4,53 @@ import edu.jsu.mcis.cs310.tas_sp23.Badge;
 import java.sql.*;
 import java.util.zip.CRC32;
 
+/**
+ * <p> The BadgeDAO class provides an interface for accessing, modifying, and
+ * creating Punch objects in the database. </p>
+ * @author Dalton Estes
+ */
 public class BadgeDAO {
 
+    /**
+     * <p> A string query statement in SQL format used by {@link #find find()} 
+     * method to interact with the database to find a badge with a specific
+     * id. </p>
+     */
     private static final String QUERY_FIND = "SELECT * FROM badge WHERE id = ?";
+    
+    /**
+     * <p> A string query statement in SQL format used by {@link #delete delete()} 
+     * method to interact with the database to delete a badge with a specific
+     * id. </p>
+     */
     private static final String QUERY_DELETE = "DELETE FROM badge WHERE id = ?";
+    
+    /**
+     * <p> A string query statement in SQL format used by {@link #delete delete()} 
+     * method to interact with the database to count all badges with a specific
+     * id. </p>
+     */
     private static final String QUERY_COUNT = "SELECT COUNT(*) AS count FROM badge";
+    
+    /**
+     * <p> A DAOFactory object used by {@link #BadgeDAO BadgeDAO()} to construct
+     * a BadgeDAO object. </p>
+     */
     private final DAOFactory daoFactory;
 
+    /**
+     * <p> Constructs a BadgeDAO object with the provided DAOFactory. </p>
+     * @param daoFactory daoFactory object
+     */
     BadgeDAO(DAOFactory daoFactory) {
         this.daoFactory = daoFactory;
     }
 
+    /**
+     * <p> Method for finding badges within the database and returning them. </p>
+     * @param id represents id
+     * @return A badge object representing the employee's badge from the database
+     */
     public Badge find(String id) {
         Badge badge = null;
 
@@ -63,6 +99,12 @@ public class BadgeDAO {
         return badge;
     }
     
+    /**
+     * <p> Method for creating badges and entering them into the database. </p>
+     * @param badge represents the badge
+     * @return boolean for if there is a badge or is not already a badge within 
+     * the database
+     */
     public boolean create(Badge badge) {
         try {
             Connection conn = daoFactory.getConnection();
@@ -97,6 +139,11 @@ public class BadgeDAO {
         }
     }
     
+    /**
+     * <p> Method for deleting a badge from the database. </p>
+     * @param id represents the id
+     * @return boolean variable success
+     */
     public boolean delete(String id) {
         boolean success = false;
         boolean results = false;

@@ -45,7 +45,7 @@ public class ShiftDAO {
     /**
      * <p>Finds a Shift object based on its ID.</p>
      * 
-     * @param id the ID of the Shift to find
+     * @param i1 the ID of the Shift to find
      * @return the Shift object with the specified ID, or null if not found
      * @throws DAOException if a database error occurs
      */
@@ -118,7 +118,7 @@ public class ShiftDAO {
     /**
      * <p>Finds a Shift object based on a Badge object.</p>
      * 
-     * @param badge the Badge object to find the Shift for
+     * @param b1 the Badge object to find the Shift for
      * @return the Shift object associated with the Badge, or null if not found
      * @throws DAOException if a database error occurs
      */
@@ -172,6 +172,13 @@ public class ShiftDAO {
         return shift;
     }
     
+    /**
+     * <p> Find method that interacts with the database to find badges of a 
+     * specified date and return their corresponding shifts. </p>
+     * @param b1 first badge that is passed
+     * @param localdate a date variable
+     * @return a shift
+     */
     public Shift find(Badge b1, LocalDate localdate) {
        
         Shift shift = null;

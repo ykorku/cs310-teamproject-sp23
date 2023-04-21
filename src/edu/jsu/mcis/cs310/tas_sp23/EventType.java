@@ -35,7 +35,7 @@ public enum EventType {
     }
 
     /**
-     * toString method returning description. </p>
+     * <p> toString method returning description. </p>
      * @return description
      */
     @Override

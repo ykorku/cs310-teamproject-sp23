@@ -21,7 +21,6 @@ public class Version2_ShiftScheduleTest {
 
     @Test
     public void test1TemporaryOverrideAllEmployees() {
-        System.out.println("Test 1");
         BadgeDAO badgeDAO = daoFactory.getBadgeDAO();
         EmployeeDAO employeeDAO = daoFactory.getEmployeeDAO();
         PunchDAO punchDAO = daoFactory.getPunchDAO();
@@ -97,7 +96,6 @@ public class Version2_ShiftScheduleTest {
     
     @Test
     public void test2TemporaryOverrideIndividualEmployee() {
-        System.out.println("Test 2");
         BadgeDAO badgeDAO = daoFactory.getBadgeDAO();
         EmployeeDAO employeeDAO = daoFactory.getEmployeeDAO();
         PunchDAO punchDAO = daoFactory.getPunchDAO();
@@ -149,8 +147,9 @@ public class Version2_ShiftScheduleTest {
         
         for (Punch p : p2) {
             p.adjust(s);
+
         }
-        
+
         /* Calculate Pay Period 09-09-2018 Absenteeism */
         
         percentage = DAOUtility.calculateAbsenteeism(p2, s);
@@ -215,7 +214,6 @@ public class Version2_ShiftScheduleTest {
     
     @Test
     public void test3RecurringOverrideIndividualEmployee() {
-        System.out.println("Test 3");
         BadgeDAO badgeDAO = daoFactory.getBadgeDAO();
         EmployeeDAO employeeDAO = daoFactory.getEmployeeDAO();
         PunchDAO punchDAO = daoFactory.getPunchDAO();

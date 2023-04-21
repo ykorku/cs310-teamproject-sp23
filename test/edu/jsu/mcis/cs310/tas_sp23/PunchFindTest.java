@@ -15,7 +15,6 @@ public class PunchFindTest {
 
     @Test
     public void testFindPunches1() {
-        System.out.println("id\tterminalid\tbadgeid\t\ttimestamp\t\teventtypeid");
         PunchDAO punchDAO = daoFactory.getPunchDAO();
 
         /* Retrieve Punches from Database */

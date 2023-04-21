@@ -116,4 +116,18 @@ public class DailySchedule {
         return lunchDuration;
     }
     
+    @Override
+    public String toString() {
+
+        StringBuilder s = new StringBuilder();
+        
+        s.append(shiftstart).append(" - ").append(shiftstop)
+                .append(" (").append(shiftDuration)
+                .append(" minutes").append(")").append("; ");
+        
+        s.append("Lunch: ").append(lunchstart).append(" - ")
+                .append(lunchstop).append(" ").append("(")
+                .append(lunchDuration).append(" minutes").append(")");
+        return s.toString();
+    }
 }

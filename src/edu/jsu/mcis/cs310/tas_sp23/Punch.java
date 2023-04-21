@@ -277,6 +277,7 @@ public class Punch {
                     } else {
                         adjustedTimeStamp = LocalDateTime
                                 .of(original_date, adjustment_helper(original_time));
+                        adjustmentType = adjustmentType.SHIFT_DOCK;
                     }
                     break;
                 case "CLOCK OUT":

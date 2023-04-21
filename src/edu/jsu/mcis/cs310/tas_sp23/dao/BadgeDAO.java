@@ -121,7 +121,6 @@ public class BadgeDAO {
                     ps.setString(1, id);
                     results = ps.execute();
                     if (results) {
-                        System.out.println("3rd if");
                         ps = conn.prepareCall(QUERY_COUNT);
                         results = ps.execute();
                         if (results) {

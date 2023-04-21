@@ -10,6 +10,7 @@ import com.github.cliftonlabs.json_simple.Jsoner;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 
 /**
  * A Data Access Object (DAO) for retrieving report data from the database.
@@ -21,7 +22,10 @@ public class ReportDAO {
     
     private static final String QUERY_FIND = "SELECT firstname, middlename, lastname, employee.departmentid, employeetype.description, badge.description, department.description, badgeid  FROM employee JOIN department ON employee.departmentid=department.id JOIN employeetype ON employee.employeetypeid=employeetype.id JOIN badge ON employee.badgeid=badge.id ORDER BY badge.description";
     private static final String QUERY_FIND_byID ="SELECT firstname, middlename, lastname, employee.departmentid, employeetype.description, badge.description, department.description, badgeid  FROM employee JOIN department ON employee.departmentid=department.id JOIN employeetype ON employee.employeetypeid=employeetype.id JOIN badge ON employee.badgeid=badge.id WHERE employee.departmentid=? ORDER BY badge.description ";
-            
+    
+    private static final String QUERY_whoinout ="SELECT firstname, middlename, lastname, employee.departmentid, employeetype.description, badge.description, department.description, employee.badgeid, event.timestamp  FROM employee JOIN department ON employee.departmentid=department.id JOIN employeetype ON employee.employeetypeid=employeetype.id JOIN badge ON employee.badgeid=badge.id JOIN event on employee.badgeid= event.badgeid WHERE employee.departmentid=? ORDER BY badge.description ";
+    private static final String QUERY_whoinoutall ="SELECT firstname, middlename, lastname, employee.departmentid, employeetype.description, badge.description, department.description, employee.badgeid, event.timestamp  FROM employee JOIN department ON employee.departmentid=department.id JOIN employeetype ON employee.employeetypeid=employeetype.id JOIN badge ON employee.badgeid=badge.id JOIN event on employee.badgeid= event.badgeid ORDER BY badge.description";
+
     private final DAOFactory daoFactory;
     
     /**
@@ -106,5 +110,77 @@ public class ReportDAO {
         String json = Jsoner.serialize(jsonArray);
         return json;
     }
+    
+    /**
+     *
+     * @return
+     */
+    public String getWhosInWhosOut(LocalDateTime ldt, Integer departmentId) {
+        
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        
+        JsonArray jsonArray = new JsonArray();
 
+        try {
+            java.sql.Connection conn = daoFactory.getConnection();
+
+            if (conn.isValid(0)) {
+
+                if (departmentId != null) {
+                    ps = conn.prepareStatement(QUERY_whoinout);
+                    ps.setInt(1, departmentId);
+                } else {
+                    ps = conn.prepareStatement(QUERY_whoinoutall);
+                }
+
+                boolean hasresults = ps.execute();
+
+                if (hasresults) {
+
+                    rs = ps.getResultSet();
+
+                    while (rs.next()) {
+                        LocalDateTime timestamp=rs.getTimestamp("event.timestamp").toLocalDateTime();
+                        if(timestamp==ldt){
+                            String name = rs.getString("badge.description");
+                            String badgeid = rs.getString("badgeid");
+                            String department = rs.getString("department.description");
+                            String employeetype = rs.getString("employeetype.description");
+                        
+
+                        // Create a JSON object for each record
+                        JsonObject jsonObject = new JsonObject();
+                        
+                        jsonObject.put("badgeid", badgeid);
+                        jsonObject.put("name", name);  
+                        jsonObject.put("department", department);
+                        jsonObject.put("type", employeetype);
+
+                        jsonArray.add(jsonObject);
+                        }
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new DAOException(e.getMessage());
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    throw new DAOException(e.getMessage());
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException e) {
+                    throw new DAOException(e.getMessage());
+                }
+            }
+        }
+        String json = Jsoner.serialize(jsonArray);
+        return json;
+    }
 }

@@ -121,8 +121,6 @@ public final class DAOUtility {
                 }
             } else {
                 minsWorked += total;
-                System.err.println("Day: " + day);
-                System.err.println("Hours worked: " + total);
             }
         }
         return minsWorked;
@@ -203,8 +201,6 @@ public final class DAOUtility {
     public static BigDecimal calculateAbsenteeism(ArrayList<Punch> punchList, Shift shift) {
         double totalHours = shift.getScheduleHours();
         double minsWorked = calculateTotalMinutes(punchList, shift);
-        System.err.println(totalHours);
-        System.err.println(minsWorked);
         BigDecimal absenteeism = new BigDecimal(100 - ((minsWorked/totalHours) * 100));
         absenteeism = absenteeism.round(new MathContext(4, RoundingMode.HALF_UP));
         

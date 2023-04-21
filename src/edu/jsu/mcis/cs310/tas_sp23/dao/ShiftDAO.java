@@ -1,18 +1,13 @@
 package edu.jsu.mcis.cs310.tas_sp23.dao;
 
 import edu.jsu.mcis.cs310.tas_sp23.Badge;
-import edu.jsu.mcis.cs310.tas_sp23.DailySchedule;
 import edu.jsu.mcis.cs310.tas_sp23.Shift;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.ZoneId;
-import java.util.Date;
 import java.util.HashMap;
 
 /**
@@ -26,8 +21,6 @@ public class ShiftDAO {
     private static final String QUERY_FIND_ID = "SELECT * FROM dailyschedule JOIN shift ON dailyschedule.id=shift.dailyscheduleid WHERE shift.dailyscheduleid = ?";
     
     private static final String QUERY_FIND_BADGE = "SELECT * FROM employee WHERE badgeid = ?";
-    
-    private static final String QUERY_CHECK_BADGE = "SELECT * FROM scheduleoverride s WHERE badgeid = ?";
     
     private static final String QUERY_FIND_BADGE2 = "SELECT * FROM scheduleoverride s JOIN dailyschedule d ON d.id=s.dailyscheduleid WHERE badgeid = ? AND (? BETWEEN CAST(`start` AS DATE) AND CAST(`end` AS DATE))";
     private static final String QUERY_FIND_BADGE3 = "SELECT * FROM scheduleoverride s JOIN dailyschedule d ON d.id=s.dailyscheduleid WHERE ? BETWEEN CAST(`start` AS DATE) AND CAST(`end` AS DATE)";
@@ -177,7 +170,6 @@ public class ShiftDAO {
 
         PreparedStatement ps = null;
         ResultSet rs = null;
-        boolean hasTime = false;
         boolean checkBadge = false;
         
         HashMap<String, String> override=new HashMap<String, String>();
@@ -186,7 +178,6 @@ public class ShiftDAO {
 
             Connection conn = daoFactory.getConnection();
             String id = b1.getId();
-            String message = "test";
             shift = find(b1);
             if (conn.isValid(0)) {
               
@@ -194,10 +185,6 @@ public class ShiftDAO {
                 ps.setDate(1, java.sql.Date.valueOf(localdate));
                 ps.execute();
                 rs = ps.getResultSet();
-                //message = rs.getString("badgeid");
-                //System.out.println(message);
-                hasTime = rs.next();
-                System.out.println(hasTime);
                 if(rs.next()) {
                     //message = rs.getString("badgeid");
                     //System.out.println(message);
@@ -205,11 +192,8 @@ public class ShiftDAO {
                         checkBadge = true;
                     }
                 }
-                hasTime = rs.next();
-                System.out.println(hasTime);
                 
                 if(checkBadge) {
-                    System.out.println("Should not show");
                     ps = conn.prepareStatement(QUERY_FIND_BADGE2);
                     ps.setString(1, id);
                     ps.setDate(2, java.sql.Date.valueOf(localdate));
@@ -219,10 +203,8 @@ public class ShiftDAO {
                 ps.execute();
                 rs = ps.getResultSet();
                 if (rs.next()) {
-                    System.out.println("Should be here!");
-                    override.put("id",  rs.getString("id"));
-                    //override.put("description",  rs.getString("description"));
 
+                    override.put("id",  rs.getString("id"));
                     override.put("shiftstart",  rs.getString("shiftstart"));
                     override.put("shiftstop",  rs.getString("shiftstop"));
                     override.put("roundinterval",  rs.getString("roundinterval"));

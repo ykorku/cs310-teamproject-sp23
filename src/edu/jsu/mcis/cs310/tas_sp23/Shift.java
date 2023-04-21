@@ -157,7 +157,7 @@ public class Shift {
             timeWorked = timeWorked.minus(lunch);
             totalHours += timeWorked.toMinutes();
         }
-        
+        System.out.println();
         return totalHours;
     }
     /**

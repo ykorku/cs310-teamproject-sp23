@@ -87,6 +87,7 @@ public final class DAOUtility {
         int total = 0;
         boolean stopLunch = false;
         boolean startLunch = false;
+        DayOfWeek day = null;
         
         for(int i = 0; i < punchlist.size(); i++) {
             int lastPunch = (punchlist.size() - 1);
@@ -95,7 +96,7 @@ public final class DAOUtility {
                 Punch punch = punchlist.get(i);
                 Punch pairPunch = punchlist.get(i + 1);
                 
-                DayOfWeek day = DayOfWeek.from(punch.getOriginaltimestamp().toLocalDate());
+                day = DayOfWeek.from(punch.getOriginaltimestamp().toLocalDate());
                 DailySchedule sl = sh.getDailySchedule(day);
                 
                 if((punch.getPunchtype() == EventType.CLOCK_IN) && (pairPunch.getPunchtype() == EventType.CLOCK_OUT)) {
@@ -120,6 +121,8 @@ public final class DAOUtility {
                 }
             } else {
                 minsWorked += total;
+                System.err.println("Day: " + day);
+                System.err.println("Hours worked: " + total);
             }
         }
         return minsWorked;
@@ -200,6 +203,8 @@ public final class DAOUtility {
     public static BigDecimal calculateAbsenteeism(ArrayList<Punch> punchList, Shift shift) {
         double totalHours = shift.getScheduleHours();
         double minsWorked = calculateTotalMinutes(punchList, shift);
+        System.err.println(totalHours);
+        System.err.println(minsWorked);
         BigDecimal absenteeism = new BigDecimal(100 - ((minsWorked/totalHours) * 100));
         absenteeism = absenteeism.round(new MathContext(4, RoundingMode.HALF_UP));
         

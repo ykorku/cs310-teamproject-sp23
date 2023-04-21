@@ -125,6 +125,8 @@ public class Version2_ShiftScheduleTest {
         for (Punch p : p1) {
             p.adjust(s);
         }
+        DailySchedule ds = s.getDailySchedule(DayOfWeek.MONDAY);
+        System.err.println("Day: " + ds.toString());
         
         /* Calculate Pay Period 09-02-2018 Absenteeism */
         
@@ -148,9 +150,12 @@ public class Version2_ShiftScheduleTest {
         ArrayList<Punch> p2 = punchDAO.list(b, begin, end);
         
         for (Punch p : p2) {
+            System.err.println("originaltime: " + p.getOriginaltimestamp());
             p.adjust(s);
+            System.err.println("adjustedtime: " + p.getAdjustedtimestamp());
         }
-        
+        DailySchedule ds2 = s.getDailySchedule(DayOfWeek.WEDNESDAY);
+        System.err.println("Day: " + ds2.toString());
         /* Calculate Pay Period 09-09-2018 Absenteeism */
         
         percentage = DAOUtility.calculateAbsenteeism(p2, s);

@@ -72,7 +72,6 @@ public class ShiftDAO {
                     rs = ps.getResultSet();
                     
                     while (rs.next()) {
-
                         HashMap<String, String> shiftValues = new HashMap<>();
                         //HashMap<String, String> dsValues = new HashMap<>();
                         
@@ -178,7 +177,8 @@ public class ShiftDAO {
 
         PreparedStatement ps = null;
         ResultSet rs = null;
-        boolean hasBadge = false;
+        boolean hasTime = false;
+        boolean checkBadge = false;
         
         HashMap<String, String> override=new HashMap<String, String>();
 
@@ -186,33 +186,40 @@ public class ShiftDAO {
 
             Connection conn = daoFactory.getConnection();
             String id = b1.getId();
+            String message = "test";
             shift = find(b1);
             if (conn.isValid(0)) {
-                
-                ps = conn.prepareStatement(QUERY_CHECK_BADGE);
-                ps.setString(1, id);
-                ps.execute();
-                rs = ps.getResultSet();
-                if(rs.next()) {
-                    
-                }
               
                 ps = conn.prepareStatement(QUERY_FIND_BADGE3);
                 ps.setDate(1, java.sql.Date.valueOf(localdate));
                 ps.execute();
-                
                 rs = ps.getResultSet();
+                //message = rs.getString("badgeid");
+                //System.out.println(message);
+                hasTime = rs.next();
+                System.out.println(hasTime);
+                if(rs.next()) {
+                    //message = rs.getString("badgeid");
+                    //System.out.println(message);
+                    if(!(rs.getObject("badgeid") == null)) {
+                        checkBadge = true;
+                    }
+                }
+                hasTime = rs.next();
+                System.out.println(hasTime);
                 
-                if(hasBadge) {
+                if(checkBadge) {
+                    System.out.println("Should not show");
                     ps = conn.prepareStatement(QUERY_FIND_BADGE2);
                     ps.setString(1, id);
                     ps.setDate(2, java.sql.Date.valueOf(localdate));
                     ps.execute();
-                    
+                    rs = ps.getResultSet();
                 }
-                
+                ps.execute();
+                rs = ps.getResultSet();
                 if (rs.next()) {
-                    
+                    System.out.println("Should be here!");
                     override.put("id",  rs.getString("id"));
                     //override.put("description",  rs.getString("description"));
 

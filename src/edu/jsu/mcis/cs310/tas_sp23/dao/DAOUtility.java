@@ -87,6 +87,7 @@ public final class DAOUtility {
         int total = 0;
         boolean stopLunch = false;
         boolean startLunch = false;
+        DayOfWeek day = null;
         
         for(int i = 0; i < punchlist.size(); i++) {
             int lastPunch = (punchlist.size() - 1);
@@ -95,7 +96,7 @@ public final class DAOUtility {
                 Punch punch = punchlist.get(i);
                 Punch pairPunch = punchlist.get(i + 1);
                 
-                DayOfWeek day = DayOfWeek.from(punch.getOriginaltimestamp().toLocalDate());
+                day = DayOfWeek.from(punch.getOriginaltimestamp().toLocalDate());
                 DailySchedule sl = sh.getDailySchedule(day);
                 
                 if((punch.getPunchtype() == EventType.CLOCK_IN) && (pairPunch.getPunchtype() == EventType.CLOCK_OUT)) {

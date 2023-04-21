@@ -147,8 +147,9 @@ public class Version2_ShiftScheduleTest {
         
         for (Punch p : p2) {
             p.adjust(s);
+
         }
-        
+
         /* Calculate Pay Period 09-09-2018 Absenteeism */
         
         percentage = DAOUtility.calculateAbsenteeism(p2, s);

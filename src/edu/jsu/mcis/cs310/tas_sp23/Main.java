@@ -16,7 +16,7 @@ public class Main {
     public static void main(String[] args) {
         
         // test database connectivity; get DAOs
-        
+         
         DAOFactory daoFactory = new DAOFactory("tas.jdbc");
         BadgeDAO badgeDAO = daoFactory.getBadgeDAO();
         
